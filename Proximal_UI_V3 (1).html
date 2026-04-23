@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proximal AI · Privacy Compliance</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap');
+
+:root {
+  --neon-blue:   #00c8ff;
+  --neon-teal:   #00ffd5;
+  --neon-green:  #39ff14;
+  --neon-yellow: #ffe600;
+  --neon-purple: #bf5fff;
+  --neon-red:    #ff4757;
+  --bg-deep:     #020c18;
+  --bg-panel:    rgba(4, 20, 42, 0.82);
+  --bg-card:     rgba(0, 30, 60, 0.75);
+  --border-dim:  rgba(0, 200, 255, 0.15);
+  --text-primary: #e8f4ff;
+  --text-muted:   rgba(180, 215, 255, 0.55);
+  --font: 'Inter', sans-serif;
+  --mono: 'Share Tech Mono', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: var(--font);
+  background-color: var(--bg-deep);
+  background-image:
+    radial-gradient(ellipse 80% 60% at 50% 50%, rgba(0,40,80,0.9) 0%, transparent 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cpath d='M30 5 L55 20 L55 40 L30 55 L5 40 L5 20 Z' fill='none' stroke='rgba(0,100,180,0.07)' stroke-width='0.8'/%3E%3C/svg%3E");
+  background-size: auto, 60px 60px;
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* SCANLINE OVERLAY */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 10, 30, 0.06) 2px,
+    rgba(0, 10, 30, 0.06) 4px
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.app-wrap {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ── HEADER ── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 36px;
+  border-bottom: 1px solid var(--border-dim);
+  background: rgba(2, 12, 28, 0.7);
+  backdrop-filter: blur(12px);
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.brand-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: 1.5px solid var(--neon-blue);
+  background: rgba(0, 200, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  box-shadow: 0 0 12px rgba(0, 200, 255, 0.25);
+}
+
+.brand-name {
+  font-family: var(--mono);
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--neon-blue);
+  text-shadow: 0 0 18px rgba(0, 200, 255, 0.5);
+  letter-spacing: 2px;
+}
+
+.brand-tag {
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.header-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.meta-pill {
+  font-size: 10px;
+  font-family: var(--mono);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid;
+}
+
+.pill-live {
+  border-color: rgba(57, 255, 20, 0.4);
+  color: var(--neon-green);
+  background: rgba(57, 255, 20, 0.05);
+  box-shadow: 0 0 10px rgba(57, 255, 20, 0.1);
+}
+
+.pill-ai {
+  border-color: rgba(0, 200, 255, 0.3);
+  color: var(--neon-blue);
+  background: rgba(0, 200, 255, 0.05);
+}
+
+/* ── MAIN LAYOUT ── */
+.main {
+  flex: 1;
+  display: flex;
+  gap: 0;
+}
+
+.panel-left {
+  flex: 1;
+  padding: 32px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.panel-right {
+  width: 220px;
+  flex-shrink: 0;
+  border-left: 1px solid var(--border-dim);
+  padding: 28px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: rgba(2, 14, 32, 0.6);
+  backdrop-filter: blur(8px);
+}
+
+/* ── SECTION LABEL ── */
+.sec-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+/* ── CONTROL ROW ── */
+.control-row {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+  flex-wrap: wrap;
+}
+
+/* BASE NEON BUTTON */
+.nbtn {
+  height: 48px;
+  padding: 0 22px;
+  border-radius: 8px;
+  border: 1.5px solid;
+  background: transparent;
+  font-family: var(--font);
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  min-width: 160px;
+}
+
+.nbtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* Start Recording */
+.nbtn-start {
+  border-color: var(--neon-blue);
+  color: var(--neon-blue);
+  box-shadow: 0 0 12px rgba(0, 200, 255, 0.2), inset 0 0 12px rgba(0, 200, 255, 0.03);
+}
+.nbtn-start:hover:not(:disabled) {
+  background: rgba(0, 200, 255, 0.1);
+  box-shadow: 0 0 22px rgba(0, 200, 255, 0.4), inset 0 0 16px rgba(0, 200, 255, 0.07);
+}
+.nbtn-start.active {
+  background: rgba(0, 200, 255, 0.12);
+  box-shadow: 0 0 28px rgba(0, 200, 255, 0.55), inset 0 0 20px rgba(0, 200, 255, 0.1);
+  animation: pulseBlue 2s ease-in-out infinite;
+}
+
+/* Stop Recording */
+.nbtn-stop {
+  border-color: var(--neon-red);
+  color: var(--neon-red);
+  box-shadow: 0 0 12px rgba(255, 71, 87, 0.18), inset 0 0 12px rgba(255, 71, 87, 0.03);
+}
+.nbtn-stop:hover:not(:disabled) {
+  background: rgba(255, 71, 87, 0.1);
+  box-shadow: 0 0 22px rgba(255, 71, 87, 0.4);
+}
+
+/* Download Transcript */
+.nbtn-download {
+  border-color: var(--neon-yellow);
+  color: var(--neon-yellow);
+  box-shadow: 0 0 12px rgba(255, 230, 0, 0.18);
+  display: none;
+}
+.nbtn-download.visible {
+  display: inline-flex;
+}
+.nbtn-download:hover:not(:disabled) {
+  background: rgba(255, 230, 0, 0.08);
+  box-shadow: 0 0 22px rgba(255, 230, 0, 0.38);
+}
+
+/* Language Select styled as neon button */
+.lang-wrap {
+  position: relative;
+  min-width: 160px;
+  height: 48px;
+}
+
+.lang-select {
+  width: 100%;
+  height: 100%;
+  padding: 0 36px 0 16px;
+  border-radius: 8px;
+  border: 1.5px solid rgba(0, 255, 213, 0.45);
+  background: transparent;
+  color: var(--neon-teal);
+  font-family: var(--font);
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  box-shadow: 0 0 12px rgba(0, 255, 213, 0.15);
+  transition: all 0.2s;
+}
+
+.lang-select:hover {
+  background: rgba(0, 255, 213, 0.07);
+  box-shadow: 0 0 22px rgba(0, 255, 213, 0.3);
+}
+
+.lang-select option {
+  background: #031828;
+  color: #c0e8f8;
+  font-weight: 400;
+}
+
+.lang-arrow {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--neon-teal);
+  font-size: 11px;
+  pointer-events: none;
+}
+
+/* ── STATUS BAR ── */
+.status-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border-dim);
+  background: rgba(0, 20, 45, 0.5);
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text-muted);
+  min-height: 40px;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  flex-shrink: 0;
+  transition: all 0.3s;
+}
+
+.status-bar.recording .status-dot {
+  background: var(--neon-green);
+  box-shadow: 0 0 8px var(--neon-green);
+  animation: blink 1s ease-in-out infinite;
+}
+
+.status-bar.recording { border-color: rgba(57, 255, 20, 0.25); color: var(--neon-green); }
+.status-bar.done { border-color: rgba(0, 200, 255, 0.25); color: var(--neon-blue); }
+.status-bar.done .status-dot { background: var(--neon-blue); box-shadow: 0 0 8px var(--neon-blue); }
+
+.status-timer {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 2px;
+}
+
+/* ── TRANSCRIPT BOX ── */
+.transcript-wrap {
+  position: relative;
+  flex: 1;
+}
+
+.transcript-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.word-count {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.word-count span {
+  color: var(--neon-blue);
+}
+
+textarea#transcript {
+  width: 100%;
+  height: 240px;
+  background: rgba(0, 15, 35, 0.6);
+  border: 1.5px solid var(--border-dim);
+  border-radius: 10px;
+  padding: 16px 18px;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--text-primary);
+  line-height: 1.75;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+textarea#transcript::placeholder { color: rgba(120, 170, 210, 0.35); font-style: italic; }
+textarea#transcript:focus { border-color: rgba(0, 200, 255, 0.4); box-shadow: 0 0 20px rgba(0, 200, 255, 0.07); }
+textarea#transcript.active-rec { border-color: rgba(57, 255, 20, 0.35); box-shadow: 0 0 20px rgba(57, 255, 20, 0.07); }
+
+/* ── UPLOAD ZONE ── */
+.upload-zone {
+  border: 1.5px dashed rgba(0, 200, 255, 0.2);
+  border-radius: 10px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(0, 15, 35, 0.4);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.upload-zone:hover {
+  border-color: rgba(0, 200, 255, 0.45);
+  background: rgba(0, 200, 255, 0.04);
+}
+
+.upload-zone-icon {
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.upload-zone-text { font-size: 13px; color: var(--text-muted); }
+.upload-zone-text b { color: var(--neon-blue); font-weight: 600; }
+
+.upload-zone input[type="file"] { display: none; }
+
+/* ── OUTPUT CARDS (right panel) ── */
+.panel-right-label {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-dim);
+  margin-bottom: 4px;
+}
+
+.out-card {
+  padding: 18px 16px;
+  border-radius: 10px;
+  border: 1.5px solid;
+  background: var(--bg-card);
+  cursor: pointer;
+  transition: all 0.22s;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  backdrop-filter: blur(6px);
+}
+
+.out-card-icon { font-size: 20px; }
+.out-card-name { font-size: 14px; font-weight: 700; letter-spacing: 0.5px; }
+.out-card-desc { font-size: 10.5px; color: var(--text-muted); line-height: 1.5; }
+
+.card-mom {
+  border-color: rgba(191, 95, 255, 0.35);
+  box-shadow: 0 0 16px rgba(191, 95, 255, 0.08);
+}
+.card-mom .out-card-name { color: var(--neon-purple); }
+.card-mom:hover {
+  border-color: rgba(191, 95, 255, 0.65);
+  background: rgba(191, 95, 255, 0.07);
+  box-shadow: 0 0 28px rgba(191, 95, 255, 0.18);
+  transform: translateX(-2px);
+}
+
+.card-ropa {
+  border-color: rgba(0, 255, 213, 0.3);
+  box-shadow: 0 0 16px rgba(0, 255, 213, 0.07);
+}
+.card-ropa .out-card-name { color: var(--neon-teal); }
+.card-ropa:hover {
+  border-color: rgba(0, 255, 213, 0.6);
+  background: rgba(0, 255, 213, 0.06);
+  box-shadow: 0 0 28px rgba(0, 255, 213, 0.16);
+  transform: translateX(-2px);
+}
+
+.card-dfd {
+  border-color: rgba(0, 200, 255, 0.3);
+  box-shadow: 0 0 16px rgba(0, 200, 255, 0.07);
+}
+.card-dfd .out-card-name { color: var(--neon-blue); }
+.card-dfd:hover {
+  border-color: rgba(0, 200, 255, 0.6);
+  background: rgba(0, 200, 255, 0.06);
+  box-shadow: 0 0 28px rgba(0, 200, 255, 0.18);
+  transform: translateX(-2px);
+}
+
+/* ── FOOTER ── */
+.footer {
+  padding: 12px 36px;
+  border-top: 1px solid var(--border-dim);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(2, 10, 22, 0.7);
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes pulseBlue {
+  0%, 100% { box-shadow: 0 0 18px rgba(0,200,255,0.4), inset 0 0 14px rgba(0,200,255,0.07); }
+  50%       { box-shadow: 0 0 36px rgba(0,200,255,0.7), inset 0 0 20px rgba(0,200,255,0.12); }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .main { flex-direction: column; }
+  .panel-right { width: 100%; flex-direction: row; border-left: none; border-top: 1px solid var(--border-dim); }
+  .out-card { flex: 1; }
+  .header { padding: 14px 18px; }
+  .panel-left { padding: 20px 18px; }
+  .control-row { flex-direction: column; }
+  .nbtn, .lang-wrap { min-width: 100%; width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<div class="app-wrap">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-brand">
+      <div class="brand-icon">🛡</div>
+      <div>
+        <div class="brand-name">PROXIMAL</div>
+        <div class="brand-tag">Privacy AI · Compliance Suite</div>
+      </div>
+    </div>
+    <div class="header-meta">
+      <span class="meta-pill pill-live">● Live</span>
+      <span class="meta-pill pill-ai">AI Enabled</span>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- LEFT PANEL -->
+    <div class="panel-left">
+
+      <!-- Section label -->
+      <div>
+        <div class="sec-label">Session Recording</div>
+        <div style="font-size:13px;color:var(--text-muted);margin-top:4px;line-height:1.6">
+          Record your compliance walkthrough or upload an existing transcript. Select language, start recording — speech converts to text in real time.
+        </div>
+      </div>
+
+      <!-- CONTROL ROW: 4 buttons -->
+      <div>
+        <div class="sec-label" style="margin-bottom:10px">Controls</div>
+        <div class="control-row">
+
+          <button class="nbtn nbtn-start" id="btnStart" onclick="startRecording()">
+            🎤 Start Recording
+          </button>
+
+          <!-- Language dropdown styled as neon button -->
+          <div class="lang-wrap">
+            <select class="lang-select" id="languageSelect">
+              <optgroup label="── Indian Languages ──">
+                <option value="en-IN">English (India)</option>
+                <option value="hi-IN">Hindi</option>
+                <option value="bn-IN">Bengali</option>
+                <option value="te-IN">Telugu</option>
+                <option value="mr-IN">Marathi</option>
+                <option value="ta-IN">Tamil</option>
+                <option value="ur-IN">Urdu</option>
+                <option value="gu-IN">Gujarati</option>
+                <option value="kn-IN">Kannada</option>
+                <option value="or-IN">Odia</option>
+                <option value="ml-IN">Malayalam</option>
+                <option value="pa-IN">Punjabi</option>
+                <option value="as-IN">Assamese</option>
+                <option value="mai-IN">Maithili</option>
+                <option value="kok-IN">Konkani</option>
+                <option value="sd-IN">Sindhi</option>
+                <option value="ks-IN">Kashmiri</option>
+                <option value="ne-IN">Nepali</option>
+                <option value="sa-IN">Sanskrit</option>
+                <option value="doi-IN">Dogri</option>
+                <option value="mni-IN">Manipuri</option>
+                <option value="sat-IN">Santali</option>
+                <option value="bho-IN">Bhojpuri</option>
+              </optgroup>
+              <optgroup label="── International ──">
+                <option value="en-US">English (US)</option>
+                <option value="en-GB">English (UK)</option>
+                <option value="en-AU">English (Australia)</option>
+                <option value="fr-FR">French</option>
+                <option value="de-DE">German</option>
+                <option value="es-ES">Spanish</option>
+                <option value="pt-BR">Portuguese (Brazil)</option>
+                <option value="pt-PT">Portuguese (Portugal)</option>
+                <option value="it-IT">Italian</option>
+                <option value="nl-NL">Dutch</option>
+                <option value="pl-PL">Polish</option>
+                <option value="ru-RU">Russian</option>
+                <option value="ar-SA">Arabic</option>
+                <option value="zh-CN">Chinese (Simplified)</option>
+                <option value="zh-TW">Chinese (Traditional)</option>
+                <option value="ja-JP">Japanese</option>
+                <option value="ko-KR">Korean</option>
+                <option value="id-ID">Indonesian</option>
+                <option value="ms-MY">Malay</option>
+                <option value="th-TH">Thai</option>
+                <option value="vi-VN">Vietnamese</option>
+                <option value="tr-TR">Turkish</option>
+              </optgroup>
+            </select>
+            <span class="lang-arrow">▼</span>
+          </div>
+
+          <button class="nbtn nbtn-stop" id="btnStop" onclick="stopRecording()" disabled>
+            ⏹ Stop Recording
+          </button>
+
+          <button class="nbtn nbtn-download" id="btnDownload" onclick="downloadTranscript()">
+            ⬇ Download Transcript
+          </button>
+
+        </div>
+      </div>
+
+      <!-- STATUS BAR -->
+      <div class="status-bar" id="statusBar">
+        <div class="status-dot" id="statusDot"></div>
+        <span id="statusText">Ready — select language and press Start Recording</span>
+        <span class="status-timer" id="recTimer" style="display:none">00:00</span>
+      </div>
+
+      <!-- TRANSCRIPT -->
+      <div class="transcript-wrap">
+        <div class="transcript-label-row">
+          <div class="sec-label" style="margin-bottom:0">Live Transcript</div>
+          <div class="word-count">Words: <span id="wordCount">0</span> &nbsp;|&nbsp; Lines: <span id="lineCount">0</span></div>
+        </div>
+        <textarea id="transcript" placeholder="Your transcript will appear here in real time as you speak...&#10;&#10;Supports continuous speech with automatic punctuation.&#10;You can also edit this text manually before generating outputs."></textarea>
+      </div>
+
+      <!-- UPLOAD -->
+      <div class="upload-zone" onclick="document.getElementById('fileUpload').click()">
+        <div class="upload-zone-icon">📁</div>
+        <div class="upload-zone-text">
+          <b>Upload existing transcript</b> — drag &amp; drop or click to browse<br>
+          <span style="font-size:11px">.txt &nbsp;·&nbsp; .docx &nbsp;·&nbsp; .pdf &nbsp;·&nbsp; Max 10MB</span>
+        </div>
+        <input type="file" id="fileUpload" accept=".txt,.docx,.pdf" onchange="handleFileUpload(this)">
+      </div>
+
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="panel-right">
+      <div class="panel-right-label">Generate Output</div>
+
+      <div class="out-card card-mom" onclick="generateOutput('mom')">
+        <div class="out-card-icon">📄</div>
+        <div class="out-card-name">MoM</div>
+        <div class="out-card-desc">Minutes of Meeting — structured summary, decisions &amp; action items</div>
+      </div>
+
+      <div class="out-card card-ropa" onclick="generateOutput('ropa')">
+        <div class="out-card-icon">🛡</div>
+        <div class="out-card-name">RoPA</div>
+        <div class="out-card-desc">Record of Processing Activities — DPDP &amp; GDPR compliant</div>
+      </div>
+
+      <div class="out-card card-dfd" onclick="generateOutput('dfd')">
+        <div class="out-card-icon">📊</div>
+        <div class="out-card-name">DFD</div>
+        <div class="out-card-desc">Data Flow Diagram — sources, flows, storage &amp; transfers</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <span>PROXIMAL · PRIVACY COMPLIANCE AI · PROTIVITI</span>
+    <span id="footerStatus">SYSTEM READY</span>
+  </footer>
+
+</div>
+
+<script>
+// ════════════════════════════════════════════════════
+//  CONFIG — paste Power Automate URL here
+// ════════════════════════════════════════════════════
+const PA_FLOW_URL = '';
+
+// ════════════════════════════════════════════════════
+//  SESSION
+// ════════════════════════════════════════════════════
+const sessionId = `PX-${Date.now()}`;
+
+// ════════════════════════════════════════════════════
+//  SPEECH STATE
+//  KEY FIX: recObj is created ONCE and NEVER recreated.
+//  Recreating the object = browser asks for mic permission again.
+//  We only call .start() / .stop() on the same object.
+// ════════════════════════════════════════════════════
+const SR_CLASS     = window.SpeechRecognition || window.webkitSpeechRecognition;
+let recObj         = null;
+let isRecording    = false;
+let restartLock    = false;
+let timerInterval  = null;
+let recSeconds     = 0;
+let confirmedText  = '';
+let lastFinalChunk = '';
+
+// ── Restore previous session ──
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('px_transcript');
+  if (saved) {
+    confirmedText = saved;
+    document.getElementById('transcript').value = saved;
+    updateStats();
+    document.getElementById('btnDownload').classList.add('visible');
+    setStatus('done', 'Previous session restored — ready');
+  }
+});
+
+// ════════════════════════════════════════════════════
+//  BUILD THE RECOGNITION OBJECT — called once only
+// ════════════════════════════════════════════════════
+function buildRecObj(lang) {
+  const r = new SR_CLASS();
+  r.continuous      = true;
+  r.interimResults  = true;
+  r.maxAlternatives = 1;
+  r.lang            = lang;
+
+  r.onresult = (e) => {
+    let interim = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      const chunk = e.results[i][0].transcript;
+      if (e.results[i].isFinal) {
+        const trimmed = chunk.trim();
+        if (trimmed && trimmed !== lastFinalChunk) {
+          confirmedText += (confirmedText ? ' ' : '') + trimmed;
+          lastFinalChunk = trimmed;
+          localStorage.setItem('px_transcript', confirmedText);
+        }
+        interim = '';
+      } else {
+        interim += chunk;
+      }
+    }
+    const box = document.getElementById('transcript');
+    box.value = confirmedText + (interim ? ' ' + interim : '');
+    box.scrollTop = box.scrollHeight;
+    updateStats();
+  };
+
+  r.onerror = (e) => {
+    if (['no-speech', 'aborted'].includes(e.error)) return;
+    if (e.error === 'not-allowed') {
+      stopRecording();
+      setStatus('error', '⚠ Mic access denied — check browser permissions');
+    }
+    // Other errors (network, etc): onend will restart automatically
+  };
+
+  // onend fires when Chrome stops the session (timeout, silence, etc).
+  // We call r.start() on the SAME object — no new object = no permission prompt.
+  r.onend = () => {
+    if (!isRecording) return;
+    if (restartLock) return;
+    restartLock = true;
+    setTimeout(() => {
+      restartLock = false;
+      if (!isRecording) return;
+      try { recObj.start(); } catch(_) {}
+    }, 150);
+  };
+
+  return r;
+}
+
+// ════════════════════════════════════════════════════
+//  START
+// ════════════════════════════════════════════════════
+function startRecording() {
+  if (!SR_CLASS) {
+    alert('Speech Recognition not supported.\nUse Chrome or Edge on desktop.');
+    return;
+  }
+  if (isRecording) return;
+
+  isRecording    = true;
+  restartLock    = false;
+  confirmedText  = document.getElementById('transcript').value.trim();
+  lastFinalChunk = '';
+
+  const lang = document.getElementById('languageSelect').value;
+
+  // Build once — language is set here and cannot change mid-session
+  if (!recObj) recObj = buildRecObj(lang);
+
+  setUIRecording(true);
+  startTimer();
+
+  try {
+    recObj.start();
+  } catch(err) {
+    if (!err.message.includes('already started')) {
+      setStatus('error', 'Could not start: ' + err.message);
+    }
+  }
+}
+
+// ════════════════════════════════════════════════════
+//  STOP
+// ════════════════════════════════════════════════════
+function stopRecording() {
+  if (!isRecording) return;
+  isRecording = false;
+
+  if (recObj) {
+    // Detach onend so it doesn't auto-restart after we stop
+    recObj.onend = null;
+    try { recObj.stop(); } catch(_) {}
+    // Keep recObj alive — don't null it out.
+    // Reattach onend after a tick so next startRecording works.
+    setTimeout(() => {
+      if (recObj) recObj.onend = () => {
+        if (!isRecording) return;
+        if (restartLock) return;
+        restartLock = true;
+        setTimeout(() => {
+          restartLock = false;
+          if (!isRecording) return;
+          try { recObj.start(); } catch(_) {}
+        }, 150);
+      };
+    }, 300);
+  }
+
+  stopTimer();
+  const box = document.getElementById('transcript');
+  box.value = confirmedText;
+  updateStats();
+  localStorage.setItem('px_transcript', confirmedText);
+  setUIRecording(false);
+  document.getElementById('btnDownload').classList.add('visible');
+}
+
+// ════════════════════════════════════════════════════
+//  TIMER
+// ════════════════════════════════════════════════════
+function startTimer() {
+  recSeconds = 0;
+  document.getElementById('recTimer').style.display = 'inline';
+  timerInterval = setInterval(() => {
+    recSeconds++;
+    const m = String(Math.floor(recSeconds / 60)).padStart(2, '0');
+    const s = String(recSeconds % 60).padStart(2, '0');
+    document.getElementById('recTimer').textContent = `${m}:${s}`;
+  }, 1000);
+}
+function stopTimer() { clearInterval(timerInterval); }
+
+// ════════════════════════════════════════════════════
+//  UI STATE
+// ════════════════════════════════════════════════════
+function setUIRecording(on) {
+  const bar  = document.getElementById('statusBar');
+  const stTxt = document.getElementById('statusText');
+  const btnS  = document.getElementById('btnStart');
+  const btnSt = document.getElementById('btnStop');
+  const box   = document.getElementById('transcript');
+  const ftr   = document.getElementById('footerStatus');
+  const lang  = document.getElementById('languageSelect');
+
+  if (on) {
+    bar.className = 'status-bar recording';
+    stTxt.textContent = 'Recording in progress — speak clearly into your microphone';
+    btnS.disabled = true; btnS.classList.add('active');
+    btnSt.disabled = false;
+    box.classList.add('active-rec');
+    lang.disabled = true;
+    ftr.textContent = '● RECORDING · ' + sessionId;
+    document.getElementById('btnDownload').classList.remove('visible');
+  } else {
+    bar.className = 'status-bar done';
+    const dur = document.getElementById('recTimer').textContent || '00:00';
+    const wc  = confirmedText.split(/\s+/).filter(Boolean).length;
+    stTxt.textContent = `Recording complete · ${dur} · ${wc} words · Ready to generate`;
+    btnS.disabled = false; btnS.classList.remove('active');
+    btnSt.disabled = true;
+    box.classList.remove('active-rec');
+    lang.disabled = false;
+    ftr.textContent = 'RECORDING COMPLETE · ' + sessionId;
+    document.getElementById('recTimer').style.display = 'none';
+  }
+}
+
+function setStatus(type, msg) {
+  document.getElementById('statusBar').className = 'status-bar' + (type ? ' ' + type : '');
+  document.getElementById('statusText').textContent = msg;
+}
+
+// ════════════════════════════════════════════════════
+//  STATS
+// ════════════════════════════════════════════════════
+function updateStats() {
+  const text  = document.getElementById('transcript').value.trim();
+  const words = text ? text.split(/\s+/).filter(Boolean).length : 0;
+  const lines = text ? text.split(/\n/).filter(Boolean).length : 0;
+  document.getElementById('wordCount').textContent = words;
+  document.getElementById('lineCount').textContent = lines;
+}
+
+// ════════════════════════════════════════════════════
+//  FILE UPLOAD
+// ════════════════════════════════════════════════════
+function handleFileUpload(input) {
+  const file = (input.files || [])[0];
+  if (!file) return;
+  if (file.name.toLowerCase().endsWith('.txt')) {
+    const rd = new FileReader();
+    rd.onload = (e) => {
+      confirmedText = e.target.result.trim();
+      document.getElementById('transcript').value = confirmedText;
+      localStorage.setItem('px_transcript', confirmedText);
+      updateStats();
+      setStatus('done', `Loaded: ${file.name} · ${confirmedText.split(/\s+/).filter(Boolean).length} words`);
+      document.getElementById('btnDownload').classList.add('visible');
+    };
+    rd.readAsText(file);
+  } else {
+    setStatus('done', `Uploaded: ${file.name} · Will be sent to Power Automate`);
+    document.getElementById('btnDownload').classList.add('visible');
+  }
+}
+
+// ════════════════════════════════════════════════════
+//  DOWNLOAD TRANSCRIPT
+// ════════════════════════════════════════════════════
+function downloadTranscript() {
+  const text = document.getElementById('transcript').value.trim();
+  if (!text) { alert('No transcript to download.'); return; }
+  const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `transcript_${sessionId}_${new Date().toISOString().slice(0,10)}.txt`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+// ════════════════════════════════════════════════════
+//  GENERATE OUTPUT
+// ════════════════════════════════════════════════════
+async function generateOutput(type) {
+  const transcript = document.getElementById('transcript').value.trim();
+  if (!transcript) { alert('Please record or upload a transcript first.'); return; }
+
+  const labels = { mom: 'MoM', ropa: 'RoPA', dfd: 'DFD' };
+  const label  = labels[type];
+  setStatus('recording', `Sending to Power Automate — generating ${label}...`);
+  document.getElementById('footerStatus').textContent = `GENERATING ${label}...`;
+
+  const card = document.querySelector(`.card-${type}`);
+  const origName = card.querySelector('.out-card-name').textContent;
+  card.querySelector('.out-card-name').textContent = '⏳ Processing...';
+
+  if (!PA_FLOW_URL) {
+    await new Promise(r => setTimeout(r, 1800));
+    card.querySelector('.out-card-name').textContent = origName;
+    setStatus('done', `[Demo] ${label} generation complete — paste PA_FLOW_URL to activate`);
+    document.getElementById('footerStatus').textContent = 'DEMO MODE';
+    return;
+  }
+
+  try {
+    const res = await fetch(PA_FLOW_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sessionId, fileName: sessionId, transcript, outputType: type })
+    });
+    const data = await res.json().catch(() => ({}));
+    card.querySelector('.out-card-name').textContent = origName;
+    if (res.ok) {
+      setStatus('done', `${label} generated ✓`);
+      document.getElementById('footerStatus').textContent = `${label} READY`;
+      if (data.fileUrl) window.open(data.fileUrl, '_blank');
+    } else {
+      setStatus('error', `Flow returned ${res.status} — check run history`);
+    }
+  } catch (err) {
+    card.querySelector('.out-card-name').textContent = origName;
+    setStatus('error', 'Network error — ' + err.message);
+  }
+}
+
+// ════════════════════════════════════════════════════
+//  DRAG & DROP + MANUAL EDIT
+// ════════════════════════════════════════════════════
+const ta = document.getElementById('transcript');
+ta.addEventListener('input', () => {
+  confirmedText = ta.value;
+  localStorage.setItem('px_transcript', confirmedText);
+  updateStats();
+});
+ta.addEventListener('drop', (e) => {
+  e.preventDefault();
+  const file = e.dataTransfer.files[0];
+  if (file) handleFileUpload({ files: [file] });
+});
+ta.addEventListener('dragover', (e) => e.preventDefault());
+</script>
+</body>
+</html>
