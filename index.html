@@ -666,11 +666,15 @@ textarea#transcript.active-rec { border-color: rgba(57, 255, 20, 0.35); box-shad
         <div class="out-card-desc">Record of Processing Activities — DPDP &amp; GDPR compliant</div>
       </div>
 
-      <div class="out-card card-dfd" onclick="generateOutput('dfd')">
+      <div class="out-card card-dfd">
         <div class="out-card-icon">📊</div>
         <div class="out-card-name">DFD</div>
         <div class="out-card-desc">Data Flow Diagram — sources, flows, storage &amp; transfers</div>
-      </div>
+        <label style="margin-top:8px; cursor:pointer; display:inline-flex; align-items:center; gap:6px; font-size:11px; color:var(--neon-blue); border:1px solid var(--neon-blue); border-radius:6px; padding:5px 10px; background:rgba(0,200,255,0.06);">
+        ⬆ Upload DFD
+        <input type="file" accept=".png,.jpg,.jpeg,.pdf,.vsdx" style="display:none" onchange="handleDFDUpload(this)">
+        </label>
+        </div>
 
     </div>
   </div>
@@ -1072,6 +1076,12 @@ ta.addEventListener('drop', (e) => {
   if (file) handleFileUpload({ files: [file] });
 });
 ta.addEventListener('dragover', (e) => e.preventDefault());
+function handleDFDUpload(input) {
+  const file = (input.files || [])[0];
+  if (!file) return;
+  setStatus('done', `DFD uploaded: ${file.name}`);
+  document.getElementById('footerStatus').textContent = 'DFD UPLOADED';
+}
 </script>
 </body>
 </html>
