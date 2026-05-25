@@ -689,9 +689,10 @@ textarea#transcript.active-rec { border-color: rgba(57, 255, 20, 0.35); box-shad
 
 <script>
 // ════════════════════════════════════════════════════
-//  CONFIG — paste Power Automate URL here
+//  CONFIG — PASTE YOUR POWER AUTOMATE WEBHOOK URLs HERE
 // ════════════════════════════════════════════════════
-const PA_FLOW_URL = '';
+const PA_FLOW_URL = ''; // For generating outputs (MoM, RoPA, DFD)
+const PA_SHAREPOINT_URL = ''; // For saving downloaded transcripts to SharePoint
 
 // ════════════════════════════════════════════════════
 //  SESSION
@@ -1003,17 +1004,50 @@ function handleFileUpload(input) {
 }
 
 // ════════════════════════════════════════════════════
-//  DOWNLOAD TRANSCRIPT
+//  DOWNLOAD TRANSCRIPT (+ SAVE TO SHAREPOINT)
 // ════════════════════════════════════════════════════
-function downloadTranscript() {
+async function downloadTranscript() {
   const text = document.getElementById('transcript').value.trim();
   if (!text) { alert('No transcript to download.'); return; }
+  
+  const fileName = `transcript_${sessionId}_${new Date().toISOString().slice(0,10)}.txt`;
+  
+  // 1. DOWNLOAD TO LOCAL DEVICE
   const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `transcript_${sessionId}_${new Date().toISOString().slice(0,10)}.txt`;
+  a.download = fileName;
   a.click();
   URL.revokeObjectURL(a.href);
+  
+  // 2. SAVE TO SHAREPOINT (async - doesn't block download)
+  if (PA_SHAREPOINT_URL) {
+    try {
+      setStatus('recording', 'Saving to SharePoint...');
+      const response = await fetch(PA_SHAREPOINT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          fileName: fileName,
+          fileContent: text,
+          sessionId: sessionId
+        })
+      });
+      
+      if (response.ok) {
+        setStatus('done', `✓ Downloaded locally & saved to SharePoint`);
+      } else {
+        console.warn('SharePoint save failed:', response.status);
+        setStatus('done', `✓ Downloaded locally (SharePoint save failed)`);
+      }
+    } catch (error) {
+      console.error('Error saving to SharePoint:', error);
+      setStatus('done', `✓ Downloaded locally (SharePoint save failed)`);
+      // Download succeeded, just SharePoint save failed - don't alarm user
+    }
+  }
 }
 
 // ════════════════════════════════════════════════════
