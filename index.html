@@ -40,6 +40,7 @@ body {
   overflow-x: hidden;
 }
 
+/* SCANLINE OVERLAY */
 body::before {
   content: '';
   position: fixed;
@@ -210,6 +211,7 @@ body::before {
   cursor: not-allowed;
 }
 
+/* Start Recording */
 .nbtn-start {
   border-color: var(--neon-blue);
   color: var(--neon-blue);
@@ -225,6 +227,7 @@ body::before {
   animation: pulseBlue 2s ease-in-out infinite;
 }
 
+/* Stop Recording */
 .nbtn-stop {
   border-color: var(--neon-red);
   color: var(--neon-red);
@@ -235,19 +238,22 @@ body::before {
   box-shadow: 0 0 22px rgba(255, 71, 87, 0.4);
 }
 
+/* Download Transcript */
 .nbtn-download {
   border-color: var(--neon-yellow);
   color: var(--neon-yellow);
   box-shadow: 0 0 12px rgba(255, 230, 0, 0.18);
   display: none;
 }
-.nbtn-download.visible { display: inline-flex; }
+.nbtn-download.visible {
+  display: inline-flex;
+}
 .nbtn-download:hover:not(:disabled) {
   background: rgba(255, 230, 0, 0.08);
   box-shadow: 0 0 22px rgba(255, 230, 0, 0.38);
 }
 
-/* Language Select */
+/* Language Select styled as neon button */
 .lang-wrap {
   position: relative;
   min-width: 160px;
@@ -271,11 +277,18 @@ body::before {
   box-shadow: 0 0 12px rgba(0, 255, 213, 0.15);
   transition: all 0.2s;
 }
+
 .lang-select:hover {
   background: rgba(0, 255, 213, 0.07);
   box-shadow: 0 0 22px rgba(0, 255, 213, 0.3);
 }
-.lang-select option { background: #031828; color: #c0e8f8; font-weight: 400; }
+
+.lang-select option {
+  background: #031828;
+  color: #c0e8f8;
+  font-weight: 400;
+}
+
 .lang-arrow {
   position: absolute;
   right: 12px;
@@ -284,106 +297,6 @@ body::before {
   color: var(--neon-teal);
   font-size: 11px;
   pointer-events: none;
-}
-
-/* ── TRANSLATE TOGGLE ── */
-.translate-toggle-wrap {
-  height: 48px;
-  padding: 0 16px;
-  border-radius: 8px;
-  border: 1.5px solid rgba(0, 255, 213, 0.35);
-  background: rgba(0, 255, 213, 0.04);
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 200px;
-  box-shadow: 0 0 12px rgba(0, 255, 213, 0.1);
-  transition: all 0.2s;
-}
-
-.translate-toggle-wrap:hover {
-  border-color: rgba(0, 255, 213, 0.55);
-  box-shadow: 0 0 20px rgba(0, 255, 213, 0.2);
-}
-
-.translate-toggle-wrap .tgl-icon {
-  font-size: 18px;
-  flex-shrink: 0;
-}
-
-.translate-toggle-wrap .tgl-text {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  flex: 1;
-}
-
-.translate-toggle-wrap .tgl-label {
-  font-size: 9.5px;
-  font-family: var(--mono);
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--text-muted);
-}
-
-.translate-toggle-wrap .tgl-status {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--neon-teal);
-  letter-spacing: 0.5px;
-  transition: color 0.2s;
-}
-
-.translate-toggle-wrap .tgl-status.off {
-  color: rgba(180, 215, 255, 0.35);
-}
-
-/* Toggle Switch */
-.tgl-switch {
-  position: relative;
-  width: 38px;
-  height: 22px;
-  flex-shrink: 0;
-  cursor: pointer;
-}
-
-.tgl-switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-  position: absolute;
-}
-
-.tgl-track {
-  position: absolute;
-  inset: 0;
-  border-radius: 11px;
-  background: rgba(0, 255, 213, 0.15);
-  border: 1px solid rgba(0, 255, 213, 0.3);
-  transition: all 0.25s;
-}
-
-.tgl-switch input:checked + .tgl-track {
-  background: rgba(0, 255, 213, 0.3);
-  border-color: var(--neon-teal);
-  box-shadow: 0 0 10px rgba(0, 255, 213, 0.4);
-}
-
-.tgl-thumb {
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: rgba(180, 215, 255, 0.4);
-  transition: all 0.25s;
-}
-
-.tgl-switch input:checked ~ .tgl-thumb {
-  left: 19px;
-  background: var(--neon-teal);
-  box-shadow: 0 0 8px rgba(0, 255, 213, 0.7);
 }
 
 /* ── STATUS BAR ── */
@@ -410,12 +323,15 @@ body::before {
   transition: all 0.3s;
 }
 
-.status-bar.recording .status-dot { background: var(--neon-green); box-shadow: 0 0 8px var(--neon-green); animation: blink 1s ease-in-out infinite; }
+.status-bar.recording .status-dot {
+  background: var(--neon-green);
+  box-shadow: 0 0 8px var(--neon-green);
+  animation: blink 1s ease-in-out infinite;
+}
+
 .status-bar.recording { border-color: rgba(57, 255, 20, 0.25); color: var(--neon-green); }
 .status-bar.done { border-color: rgba(0, 200, 255, 0.25); color: var(--neon-blue); }
 .status-bar.done .status-dot { background: var(--neon-blue); box-shadow: 0 0 8px var(--neon-blue); }
-.status-bar.translating { border-color: rgba(0, 255, 213, 0.25); color: var(--neon-teal); }
-.status-bar.translating .status-dot { background: var(--neon-teal); box-shadow: 0 0 8px var(--neon-teal); animation: blink 0.6s ease-in-out infinite; }
 
 .status-timer {
   margin-left: auto;
@@ -425,7 +341,10 @@ body::before {
 }
 
 /* ── TRANSCRIPT BOX ── */
-.transcript-wrap { position: relative; flex: 1; }
+.transcript-wrap {
+  position: relative;
+  flex: 1;
+}
 
 .transcript-label-row {
   display: flex;
@@ -434,8 +353,15 @@ body::before {
   margin-bottom: 8px;
 }
 
-.word-count { font-family: var(--mono); font-size: 11px; color: var(--text-muted); }
-.word-count span { color: var(--neon-blue); }
+.word-count {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.word-count span {
+  color: var(--neon-blue);
+}
 
 textarea#transcript {
   width: 100%;
@@ -456,26 +382,6 @@ textarea#transcript {
 textarea#transcript::placeholder { color: rgba(120, 170, 210, 0.35); font-style: italic; }
 textarea#transcript:focus { border-color: rgba(0, 200, 255, 0.4); box-shadow: 0 0 20px rgba(0, 200, 255, 0.07); }
 textarea#transcript.active-rec { border-color: rgba(57, 255, 20, 0.35); box-shadow: 0 0 20px rgba(57, 255, 20, 0.07); }
-textarea#transcript.active-translate { border-color: rgba(0, 255, 213, 0.45); box-shadow: 0 0 20px rgba(0, 255, 213, 0.1); }
-
-/* Translate badge on transcript */
-.translate-badge {
-  display: none;
-  position: absolute;
-  top: 36px;
-  right: 12px;
-  font-family: var(--mono);
-  font-size: 9px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  padding: 3px 10px;
-  border-radius: 20px;
-  border: 1px solid rgba(0, 255, 213, 0.4);
-  color: var(--neon-teal);
-  background: rgba(0, 20, 30, 0.85);
-  pointer-events: none;
-}
-.translate-badge.visible { display: block; }
 
 /* ── UPLOAD ZONE ── */
 .upload-zone {
@@ -489,13 +395,23 @@ textarea#transcript.active-translate { border-color: rgba(0, 255, 213, 0.45); bo
   cursor: pointer;
   transition: all 0.2s;
 }
-.upload-zone:hover { border-color: rgba(0, 200, 255, 0.45); background: rgba(0, 200, 255, 0.04); }
-.upload-zone-icon { font-size: 22px; flex-shrink: 0; }
+
+.upload-zone:hover {
+  border-color: rgba(0, 200, 255, 0.45);
+  background: rgba(0, 200, 255, 0.04);
+}
+
+.upload-zone-icon {
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
 .upload-zone-text { font-size: 13px; color: var(--text-muted); }
 .upload-zone-text b { color: var(--neon-blue); font-weight: 600; }
+
 .upload-zone input[type="file"] { display: none; }
 
-/* ── RIGHT PANEL ── */
+/* ── OUTPUT CARDS (right panel) ── */
 .panel-right-label {
   font-family: var(--mono);
   font-size: 9.5px;
@@ -519,21 +435,46 @@ textarea#transcript.active-translate { border-color: rgba(0, 255, 213, 0.45); bo
   gap: 6px;
   backdrop-filter: blur(6px);
 }
+
 .out-card-icon { font-size: 20px; }
 .out-card-name { font-size: 14px; font-weight: 700; letter-spacing: 0.5px; }
 .out-card-desc { font-size: 10.5px; color: var(--text-muted); line-height: 1.5; }
 
-.card-mom { border-color: rgba(191, 95, 255, 0.35); box-shadow: 0 0 16px rgba(191, 95, 255, 0.08); }
+.card-mom {
+  border-color: rgba(191, 95, 255, 0.35);
+  box-shadow: 0 0 16px rgba(191, 95, 255, 0.08);
+}
 .card-mom .out-card-name { color: var(--neon-purple); }
-.card-mom:hover { border-color: rgba(191, 95, 255, 0.65); background: rgba(191, 95, 255, 0.07); box-shadow: 0 0 28px rgba(191, 95, 255, 0.18); transform: translateX(-2px); }
+.card-mom:hover {
+  border-color: rgba(191, 95, 255, 0.65);
+  background: rgba(191, 95, 255, 0.07);
+  box-shadow: 0 0 28px rgba(191, 95, 255, 0.18);
+  transform: translateX(-2px);
+}
 
-.card-ropa { border-color: rgba(0, 255, 213, 0.3); box-shadow: 0 0 16px rgba(0, 255, 213, 0.07); }
+.card-ropa {
+  border-color: rgba(0, 255, 213, 0.3);
+  box-shadow: 0 0 16px rgba(0, 255, 213, 0.07);
+}
 .card-ropa .out-card-name { color: var(--neon-teal); }
-.card-ropa:hover { border-color: rgba(0, 255, 213, 0.6); background: rgba(0, 255, 213, 0.06); box-shadow: 0 0 28px rgba(0, 255, 213, 0.16); transform: translateX(-2px); }
+.card-ropa:hover {
+  border-color: rgba(0, 255, 213, 0.6);
+  background: rgba(0, 255, 213, 0.06);
+  box-shadow: 0 0 28px rgba(0, 255, 213, 0.16);
+  transform: translateX(-2px);
+}
 
-.card-dfd { border-color: rgba(0, 200, 255, 0.3); box-shadow: 0 0 16px rgba(0, 200, 255, 0.07); }
+.card-dfd {
+  border-color: rgba(0, 200, 255, 0.3);
+  box-shadow: 0 0 16px rgba(0, 200, 255, 0.07);
+}
 .card-dfd .out-card-name { color: var(--neon-blue); }
-.card-dfd:hover { border-color: rgba(0, 200, 255, 0.6); background: rgba(0, 200, 255, 0.06); box-shadow: 0 0 28px rgba(0, 200, 255, 0.18); transform: translateX(-2px); }
+.card-dfd:hover {
+  border-color: rgba(0, 200, 255, 0.6);
+  background: rgba(0, 200, 255, 0.06);
+  box-shadow: 0 0 28px rgba(0, 200, 255, 0.18);
+  transform: translateX(-2px);
+}
 
 /* ── FOOTER ── */
 .footer {
@@ -554,6 +495,7 @@ textarea#transcript.active-translate { border-color: rgba(0, 255, 213, 0.45); bo
   0%, 100% { box-shadow: 0 0 18px rgba(0,200,255,0.4), inset 0 0 14px rgba(0,200,255,0.07); }
   50%       { box-shadow: 0 0 36px rgba(0,200,255,0.7), inset 0 0 20px rgba(0,200,255,0.12); }
 }
+
 @keyframes blink {
   0%, 100% { opacity: 1; }
   50%       { opacity: 0.3; }
@@ -567,7 +509,7 @@ textarea#transcript.active-translate { border-color: rgba(0, 255, 213, 0.45); bo
   .header { padding: 14px 18px; }
   .panel-left { padding: 20px 18px; }
   .control-row { flex-direction: column; }
-  .nbtn, .lang-wrap, .translate-toggle-wrap { min-width: 100%; width: 100%; }
+  .nbtn, .lang-wrap { min-width: 100%; width: 100%; }
 }
 </style>
 </head>
@@ -596,6 +538,7 @@ textarea#transcript.active-translate { border-color: rgba(0, 255, 213, 0.45); bo
     <!-- LEFT PANEL -->
     <div class="panel-left">
 
+      <!-- Section label -->
       <div>
         <div class="sec-label">Session Recording</div>
         <div style="font-size:13px;color:var(--text-muted);margin-top:4px;line-height:1.6">
@@ -603,7 +546,7 @@ textarea#transcript.active-translate { border-color: rgba(0, 255, 213, 0.45); bo
         </div>
       </div>
 
-      <!-- CONTROL ROW -->
+      <!-- CONTROL ROW: 4 buttons -->
       <div>
         <div class="sec-label" style="margin-bottom:10px">Controls</div>
         <div class="control-row">
@@ -612,42 +555,70 @@ textarea#transcript.active-translate { border-color: rgba(0, 255, 213, 0.45); bo
             🎤 Start Recording
           </button>
 
-          <!-- Multilingual badge — no dropdown needed, all langs run in parallel -->
-          <div style="height:48px; padding:0 18px; border-radius:8px; border:1.5px solid rgba(57,255,20,0.35); background:rgba(57,255,20,0.04); display:inline-flex; align-items:center; gap:10px; box-shadow:0 0 12px rgba(57,255,20,0.1);">
-            <span style="font-size:16px;">🌍</span>
-            <div>
-              <div style="font-family:var(--mono); font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--text-muted);">Language Mode</div>
-              <div style="font-size:12px; font-weight:700; color:var(--neon-green); letter-spacing:0.5px;">AUTO · 20 Languages</div>
-            </div>
+          <!-- Language dropdown styled as neon button -->
+          <div class="lang-wrap">
+            <select class="lang-select" id="languageSelect">
+              <optgroup label="── Indian Languages ──">
+                <option value="en-IN">English (India)</option>
+                <option value="hi-IN">Hindi</option>
+                <option value="bn-IN">Bengali</option>
+                <option value="te-IN">Telugu</option>
+                <option value="mr-IN">Marathi</option>
+                <option value="ta-IN">Tamil</option>
+                <option value="ur-IN">Urdu</option>
+                <option value="gu-IN">Gujarati</option>
+                <option value="kn-IN">Kannada</option>
+                <option value="or-IN">Odia</option>
+                <option value="ml-IN">Malayalam</option>
+                <option value="pa-IN">Punjabi</option>
+                <option value="as-IN">Assamese</option>
+                <option value="mai-IN">Maithili</option>
+                <option value="kok-IN">Konkani</option>
+                <option value="sd-IN">Sindhi</option>
+                <option value="ks-IN">Kashmiri</option>
+                <option value="ne-IN">Nepali</option>
+                <option value="sa-IN">Sanskrit</option>
+                <option value="doi-IN">Dogri</option>
+                <option value="mni-IN">Manipuri</option>
+                <option value="sat-IN">Santali</option>
+                <option value="bho-IN">Bhojpuri</option>
+              </optgroup>
+              <optgroup label="── International ──">
+                <option value="en-US">English (US)</option>
+                <option value="en-GB">English (UK)</option>
+                <option value="en-AU">English (Australia)</option>
+                <option value="fr-FR">French</option>
+                <option value="de-DE">German</option>
+                <option value="es-ES">Spanish</option>
+                <option value="pt-BR">Portuguese (Brazil)</option>
+                <option value="pt-PT">Portuguese (Portugal)</option>
+                <option value="it-IT">Italian</option>
+                <option value="nl-NL">Dutch</option>
+                <option value="pl-PL">Polish</option>
+                <option value="ru-RU">Russian</option>
+                <option value="ar-SA">Arabic</option>
+                <option value="zh-CN">Chinese (Simplified)</option>
+                <option value="zh-TW">Chinese (Traditional)</option>
+                <option value="ja-JP">Japanese</option>
+                <option value="ko-KR">Korean</option>
+                <option value="id-ID">Indonesian</option>
+                <option value="ms-MY">Malay</option>
+                <option value="th-TH">Thai</option>
+                <option value="vi-VN">Vietnamese</option>
+                <option value="tr-TR">Turkish</option>
+              </optgroup>
+            </select>
+            <span class="lang-arrow">▼</span>
           </div>
 
           <button class="nbtn nbtn-stop" id="btnStop" onclick="stopRecording()" disabled>
             ⏹ Stop Recording
           </button>
 
-          <!-- ── TRANSLATE TOGGLE ── -->
-          <div class="translate-toggle-wrap">
-            <span class="tgl-icon">🌐</span>
-            <div class="tgl-text">
-              <span class="tgl-label">Translate to English</span>
-              <span class="tgl-status" id="tglStatus">ON</span>
-            </div>
-            <label class="tgl-switch" title="Toggle live translation to English">
-              <input type="checkbox" id="translateToggle" checked onchange="onTranslateToggle()">
-              <div class="tgl-track"></div>
-              <div class="tgl-thumb"></div>
-            </label>
-          </div>
-
           <button class="nbtn nbtn-download" id="btnDownload" onclick="downloadTranscript()">
             ⬇ Download Transcript
           </button>
 
-        </div>
-
-        <!-- Translation notice bar -->
-        <div id="translateNotice" style="margin-top:10px; padding:8px 14px; border-radius:7px; border:1px solid rgba(0,255,213,0.2); background:rgba(0,255,213,0.04); font-size:11.5px; color:var(--neon-teal); font-family:var(--mono); letter-spacing:0.5px; display:flex; align-items:center; gap:8px;">
-          🌐 &nbsp;<span>Live translation <strong>ON</strong> — Hindi · Bengali · Tamil · Telugu · Marathi · Gujarati · Kannada · Malayalam · Punjabi · Urdu + 10 more &nbsp;·&nbsp; All convert to English &nbsp;·&nbsp; Demo mode — use dummy data only</span>
         </div>
       </div>
 
@@ -664,7 +635,6 @@ textarea#transcript.active-translate { border-color: rgba(0, 255, 213, 0.45); bo
           <div class="sec-label" style="margin-bottom:0">Live Transcript</div>
           <div class="word-count">Words: <span id="wordCount">0</span> &nbsp;|&nbsp; Lines: <span id="lineCount">0</span></div>
         </div>
-        <div class="translate-badge" id="translateBadge">🌐 EN</div>
         <textarea id="transcript" placeholder="Your transcript will appear here in real time as you speak...&#10;&#10;Supports continuous speech with automatic punctuation.&#10;You can also edit this text manually before generating outputs."></textarea>
       </div>
 
@@ -673,7 +643,7 @@ textarea#transcript.active-translate { border-color: rgba(0, 255, 213, 0.45); bo
         <div class="upload-zone-icon">📁</div>
         <div class="upload-zone-text">
           <b>Upload existing transcript</b> — drag &amp; drop or click to browse<br>
-          <span style="font-size:11px">.txt &nbsp;·&nbsp; .docx &nbsp;·&nbsp; .pdf &nbsp;·&nbsp; Max 50 MB</span>
+          <span style="font-size:11px">.txt &nbsp;·&nbsp; .docx &nbsp;·&nbsp; .pdf &nbsp;·&nbsp; Max 1 GB</span>
         </div>
         <input type="file" id="fileUpload" accept=".txt,.docx,.pdf" onchange="handleFileUpload(this)">
       </div>
@@ -701,10 +671,11 @@ textarea#transcript.active-translate { border-color: rgba(0, 255, 213, 0.45); bo
         <div class="out-card-name">DFD</div>
         <div class="out-card-desc">Data Flow Diagram — sources, flows, storage &amp; transfers</div>
         <label style="margin-top:8px; cursor:pointer; display:inline-flex; align-items:center; gap:6px; font-size:11px; color:var(--neon-blue); border:1px solid var(--neon-blue); border-radius:6px; padding:5px 10px; background:rgba(0,200,255,0.06);">
-          ⬆ Upload ROPA (xlsx/xls only)
-          <input type="file" accept=".png,.jpg,.jpeg,.pdf,.vsdx" style="display:none" onchange="handleDFDUpload(this)">
+        ⬆ Upload ROPA (xlsx and xls file only)
+        <input type="file" accept=".png,.jpg,.jpeg,.pdf,.vsdx" style="display:none" onchange="handleDFDUpload(this)">
         </label>
-      </div>
+        </div>
+
     </div>
   </div>
 
@@ -717,172 +688,44 @@ textarea#transcript.active-translate { border-color: rgba(0, 255, 213, 0.45); bo
 </div>
 
 <script>
-// ════════════════════════════════════════════
-//  CONFIG
-// ════════════════════════════════════════════
-const PA_FLOW_URL       = '';
-const PA_SHAREPOINT_URL = 'https://defaulta9d9096491d34c01ab00563f95f00a.38.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/95a36e4b90244056b8aff9cfd1e50ff6/triggers/manual/paths/invoke?api-version=1';
+// ════════════════════════════════════════════════════
+//  CONFIG — PASTE YOUR POWER AUTOMATE WEBHOOK URLs HERE
+// ════════════════════════════════════════════════════
+const PA_FLOW_URL = ''; // For generating outputs (MoM, RoPA, DFD)
+const PA_SHAREPOINT_URL = 'https://defaulta9d9096491d34c01ab00563f95f00a.38.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/95a36e4b90244056b8aff9cfd1e50ff6/triggers/manual/paths/invoke?api-version=1'; // For saving downloaded transcripts to SharePoint
 
-// Google Translate unofficial endpoint
-// ⚠️  FOR DEMO / TESTING ONLY — use dummy data, not real client transcripts
-const GT_URL = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q=';
-
-// ════════════════════════════════════════════
+// ════════════════════════════════════════════════════
 //  SESSION
-// ════════════════════════════════════════════
+// ════════════════════════════════════════════════════
 const sessionId = `PX-${Date.now()}`;
 
-// ════════════════════════════════════════════
+// ════════════════════════════════════════════════════
 //  SPEECH STATE
-// ════════════════════════════════════════════
-const SR_CLASS = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-// Parallel listener languages — covers all major Indian + international langs
-// Each listener runs simultaneously; whichever fires first wins that chunk
-const PARALLEL_LANGS = [
-  'hi-IN',   // Hindi
-  'bn-IN',   // Bengali
-  'ta-IN',   // Tamil
-  'te-IN',   // Telugu
-  'mr-IN',   // Marathi
-  'gu-IN',   // Gujarati
-  'kn-IN',   // Kannada
-  'ml-IN',   // Malayalam
-  'pa-IN',   // Punjabi
-  'ur-IN',   // Urdu
-  'en-IN',   // English (India)
-  'en-US',   // English (US)
-  'fr-FR',   // French
-  'de-DE',   // German
-  'es-ES',   // Spanish
-  'ar-SA',   // Arabic
-  'zh-CN',   // Chinese
-  'ja-JP',   // Japanese
-  'ko-KR',   // Korean
-  'ru-RU',   // Russian
-];
-
-let recObjs        = [];     // array of parallel SpeechRecognition instances
+//  KEY FIX: recObj is created ONCE and NEVER recreated.
+//  Recreating the object = browser asks for mic permission again.
+//  We only call .start() / .stop() on the same object.
+// ════════════════════════════════════════════════════
+const SR_CLASS     = window.SpeechRecognition || window.webkitSpeechRecognition;
+let recObj         = null;
 let isRecording    = false;
+let restartLock    = false;
 let timerInterval  = null;
 let recSeconds     = 0;
 let confirmedText  = '';
+let lastFinalChunk = '';
 
-// Dedup: track last N accepted chunks to avoid same text from multiple listeners
-const DEDUP_WINDOW = 5;
-let recentChunks   = [];
-
-// Translation state
-let translateEnabled = true;
-let translateQueue   = [];
-let isTranslating    = false;
-
-// Timestamp of last accepted chunk — throttle overlapping results
-let lastChunkTime  = 0;
-
+// ── Clear any previous session on fresh load ──
 window.addEventListener('DOMContentLoaded', () => {
   localStorage.removeItem('px_transcript');
   confirmedText = '';
   document.getElementById('transcript').value = '';
   updateStats();
-  updateTranslateUI();
 });
 
-// ════════════════════════════════════════════
-//  TRANSLATE TOGGLE
-// ════════════════════════════════════════════
-function onTranslateToggle() {
-  translateEnabled = document.getElementById('translateToggle').checked;
-  updateTranslateUI();
-}
-
-function updateTranslateUI() {
-  const status  = document.getElementById('tglStatus');
-  const badge   = document.getElementById('translateBadge');
-  const notice  = document.getElementById('translateNotice');
-  const box     = document.getElementById('transcript');
-
-  if (translateEnabled) {
-    status.textContent = 'ON';
-    status.classList.remove('off');
-    badge.classList.add('visible');
-    notice.style.display = 'flex';
-    box.placeholder = 'Speak freely in any language — Hindi, Bengali, Tamil, Telugu, Marathi, Gujarati, Kannada, Malayalam, Punjabi, Urdu, English, French, Arabic and more...\n\nEven switch languages mid-sentence — the transcript auto-converts to English.';
-  } else {
-    status.textContent = 'OFF';
-    status.classList.add('off');
-    badge.classList.remove('visible');
-    notice.style.display = 'none';
-    box.placeholder = 'Your transcript will appear here in real time as you speak freely in any language...\n\nSwitch languages mid-sentence — the app listens to 20 languages simultaneously.\nYou can also edit this text manually before generating outputs.';
-  }
-}
-
-// ════════════════════════════════════════════
-//  GOOGLE TRANSLATE (unofficial, demo only)
-// ════════════════════════════════════════════
-async function translateToEnglish(text) {
-  if (!text || !text.trim()) return text;
-  try {
-    const res  = await fetch(GT_URL + encodeURIComponent(text.trim()));
-    const data = await res.json();
-    // Google returns nested arrays: [[["translated","original",...],...]...]
-    if (data && data[0]) {
-      return data[0].map(chunk => chunk[0]).filter(Boolean).join(' ').trim();
-    }
-    return text;
-  } catch (err) {
-    console.warn('Translation failed, using original:', err.message);
-    return text; // fallback: show original text
-  }
-}
-
-// Queue-based translation so chunks don't overlap
-async function processTranslateQueue() {
-  if (isTranslating || translateQueue.length === 0) return;
-  isTranslating = true;
-
-  while (translateQueue.length > 0) {
-    const chunk = translateQueue.shift();
-    const translated = await translateToEnglish(chunk);
-    if (translated && translated !== lastFinalChunk) {
-      confirmedText += (confirmedText ? ' ' : '') + translated;
-      lastFinalChunk = translated;
-      localStorage.setItem('px_transcript', confirmedText);
-      const box = document.getElementById('transcript');
-      box.value = confirmedText;
-      box.scrollTop = box.scrollHeight;
-      updateStats();
-    }
-  }
-
-  isTranslating = false;
-}
-
-// ════════════════════════════════════════════
-//  DEDUP HELPER
-//  Checks if a chunk is too similar to recent ones
-//  Prevents multiple listeners firing for same speech
-// ════════════════════════════════════════════
-function isDuplicate(text) {
-  const t = text.trim().toLowerCase();
-  for (const r of recentChunks) {
-    // exact match
-    if (r === t) return true;
-    // one is substring of other (partial overlap)
-    if (t.includes(r) || r.includes(t)) return true;
-  }
-  return false;
-}
-
-function registerChunk(text) {
-  recentChunks.push(text.trim().toLowerCase());
-  if (recentChunks.length > DEDUP_WINDOW) recentChunks.shift();
-}
-
-// ════════════════════════════════════════════
-//  BUILD ONE PARALLEL LISTENER
-// ════════════════════════════════════════════
-function buildListener(lang) {
+// ════════════════════════════════════════════════════
+//  BUILD THE RECOGNITION OBJECT — called once only
+// ════════════════════════════════════════════════════
+function buildRecObj(lang) {
   const r = new SR_CLASS();
   r.continuous      = true;
   r.interimResults  = true;
@@ -890,150 +733,110 @@ function buildListener(lang) {
   r.lang            = lang;
 
   r.onresult = (e) => {
+    let interim = '';
     for (let i = e.resultIndex; i < e.results.length; i++) {
-      const chunk   = e.results[i][0].transcript;
-      const conf    = e.results[i][0].confidence || 0;
-      const isFinal = e.results[i].isFinal;
-
-      if (isFinal) {
+      const chunk = e.results[i][0].transcript;
+      if (e.results[i].isFinal) {
         const trimmed = chunk.trim();
-        if (!trimmed) continue;
-
-        // Throttle: ignore if another listener fired < 300ms ago
-        const now = Date.now();
-        if (now - lastChunkTime < 300) continue;
-
-        // Dedup: ignore if same/similar text already accepted
-        if (isDuplicate(trimmed)) continue;
-
-        // Accept this chunk
-        lastChunkTime = now;
-        registerChunk(trimmed);
-
-        if (translateEnabled) {
-          translateQueue.push(trimmed);
-          processTranslateQueue();
-          setStatus('translating', `🌐 Translating... · ${lang.split('-')[0].toUpperCase()} detected`);
-          setTimeout(() => {
-            if (isRecording) setStatus('recording', '🎤 Multilingual recording active — speak any language');
-          }, 1400);
-        } else {
+        if (trimmed && trimmed !== lastFinalChunk) {
           confirmedText += (confirmedText ? ' ' : '') + trimmed;
+          lastFinalChunk = trimmed;
           localStorage.setItem('px_transcript', confirmedText);
-          const box = document.getElementById('transcript');
-          box.value = confirmedText;
-          box.scrollTop = box.scrollHeight;
-          updateStats();
         }
+        interim = '';
       } else {
-        // Show interim from whichever listener is most active
-        if (translateEnabled) {
-          const box = document.getElementById('transcript');
-          box.value = confirmedText + (chunk ? ' [' + chunk + ']' : '');
-          box.scrollTop = box.scrollHeight;
-        } else {
-          const box = document.getElementById('transcript');
-          box.value = confirmedText + (chunk ? ' ' + chunk : '');
-          box.scrollTop = box.scrollHeight;
-          updateStats();
-        }
+        interim += chunk;
       }
     }
+    const box = document.getElementById('transcript');
+    box.value = confirmedText + (interim ? ' ' + interim : '');
+    box.scrollTop = box.scrollHeight;
+    updateStats();
   };
 
   r.onerror = (e) => {
-    if (['no-speech', 'aborted', 'network'].includes(e.error)) return;
+    if (['no-speech', 'aborted'].includes(e.error)) return;
     if (e.error === 'not-allowed') {
       stopRecording();
       setStatus('error', '⚠ Mic access denied — check browser permissions');
     }
+    // Other errors (network, etc): onend will restart automatically
   };
 
-  // Auto-restart this individual listener when it stops
+  // onend fires when Chrome stops the session (timeout, silence, etc).
+  // We call r.start() on the SAME object — no new object = no permission prompt.
   r.onend = () => {
     if (!isRecording) return;
+    if (restartLock) return;
+    restartLock = true;
     setTimeout(() => {
+      restartLock = false;
       if (!isRecording) return;
-      try { r.start(); } catch(_) {}
-    }, 200);
+      try { recObj.start(); } catch(_) {}
+    }, 150);
   };
 
   return r;
 }
 
-// ════════════════════════════════════════════
-//  DESTROY ALL LISTENERS
-// ════════════════════════════════════════════
-function destroyAllListeners() {
-  recObjs.forEach(r => {
-    r.onresult = null;
-    r.onerror  = null;
-    r.onend    = null;
-    try { r.stop(); } catch(_) {}
-  });
-  recObjs = [];
-}
-
-// ════════════════════════════════════════════
-//  START — request mic ONCE, then start all listeners
-// ════════════════════════════════════════════
+// ════════════════════════════════════════════════════
+//  START
+// ════════════════════════════════════════════════════
 function startRecording() {
-  if (!SR_CLASS) { alert('Speech Recognition not supported.\nUse Chrome or Edge on desktop.'); return; }
-  if (isRecording) return;
-
-  // ── STEP 1: Request mic permission once via getUserMedia
-  // This pops ONE permission dialog. Once granted, all
-  // SpeechRecognition instances share the same mic stream silently.
-  navigator.mediaDevices.getUserMedia({ audio: true })
-    .then(stream => {
-      // Permission granted — stop the raw stream immediately
-      // (SpeechRecognition will manage its own mic access from here)
-      stream.getTracks().forEach(t => t.stop());
-      launchListeners();
-    })
-    .catch(err => {
-      setStatus('error', '⚠ Mic access denied — please allow microphone access');
-    });
-}
-
-function launchListeners() {
+  if (!SR_CLASS) {
+    alert('Speech Recognition not supported.\nUse Chrome or Edge on desktop.');
+    return;
+  }
   if (isRecording) return;
 
   isRecording    = true;
+  restartLock    = false;
   confirmedText  = document.getElementById('transcript').value.trim();
-  recentChunks   = [];
-  translateQueue = [];
-  isTranslating  = false;
-  lastChunkTime  = 0;
+  lastFinalChunk = '';
 
-  // Destroy any leftover listeners from previous session
-  destroyAllListeners();
+  const lang = document.getElementById('languageSelect').value;
 
-  // Build and start one listener per language — staggered by 150ms
-  // After mic permission is already granted, stagger prevents
-  // browser audio pipeline from being hit all at once
-  PARALLEL_LANGS.forEach((lang, idx) => {
-    setTimeout(() => {
-      if (!isRecording) return;
-      const r = buildListener(lang);
-      recObjs.push(r);
-      try { r.start(); } catch(_) {}
-    }, idx * 150);
-  });
+  // Build once — language is set here and cannot change mid-session
+  if (!recObj) recObj = buildRecObj(lang);
 
   setUIRecording(true);
   startTimer();
-  setStatus('recording', '🎤 Multilingual recording active — speak any language freely');
+
+  try {
+    recObj.start();
+  } catch(err) {
+    if (!err.message.includes('already started')) {
+      setStatus('error', 'Could not start: ' + err.message);
+    }
+  }
 }
 
-// ════════════════════════════════════════════
+// ════════════════════════════════════════════════════
 //  STOP
-// ════════════════════════════════════════════
+// ════════════════════════════════════════════════════
 function stopRecording() {
   if (!isRecording) return;
   isRecording = false;
 
-  destroyAllListeners();
+  if (recObj) {
+    // Detach onend so it doesn't auto-restart after we stop
+    recObj.onend = null;
+    try { recObj.stop(); } catch(_) {}
+    // Keep recObj alive — don't null it out.
+    // Reattach onend after a tick so next startRecording works.
+    setTimeout(() => {
+      if (recObj) recObj.onend = () => {
+        if (!isRecording) return;
+        if (restartLock) return;
+        restartLock = true;
+        setTimeout(() => {
+          restartLock = false;
+          if (!isRecording) return;
+          try { recObj.start(); } catch(_) {}
+        }, 150);
+      };
+    }, 300);
+  }
 
   stopTimer();
   const box = document.getElementById('transcript');
@@ -1044,9 +847,9 @@ function stopRecording() {
   document.getElementById('btnDownload').classList.add('visible');
 }
 
-// ════════════════════════════════════════════
+// ════════════════════════════════════════════════════
 //  TIMER
-// ════════════════════════════════════════════
+// ════════════════════════════════════════════════════
 function startTimer() {
   recSeconds = 0;
   document.getElementById('recTimer').style.display = 'inline';
@@ -1059,29 +862,26 @@ function startTimer() {
 }
 function stopTimer() { clearInterval(timerInterval); }
 
-// ════════════════════════════════════════════
+// ════════════════════════════════════════════════════
 //  UI STATE
-// ════════════════════════════════════════════
+// ════════════════════════════════════════════════════
 function setUIRecording(on) {
-  const bar   = document.getElementById('statusBar');
+  const bar  = document.getElementById('statusBar');
   const stTxt = document.getElementById('statusText');
   const btnS  = document.getElementById('btnStart');
   const btnSt = document.getElementById('btnStop');
   const box   = document.getElementById('transcript');
   const ftr   = document.getElementById('footerStatus');
-  // language dropdown removed — multilingual auto-detect
-  const tgl   = document.getElementById('translateToggle');
+  const lang  = document.getElementById('languageSelect');
 
   if (on) {
     bar.className = 'status-bar recording';
-    const tMode = translateEnabled ? ' · 🌐 → English' : '';
-    stTxt.textContent = `🎤 Multilingual recording active — speak any language${tMode}`;
+    stTxt.textContent = 'Recording in progress — speak clearly into your microphone';
     btnS.disabled = true; btnS.classList.add('active');
     btnSt.disabled = false;
     box.classList.add('active-rec');
-    if (translateEnabled) box.classList.add('active-translate');
-    tgl.disabled  = true;
-    ftr.textContent = '● MULTILINGUAL RECORDING · ' + sessionId;
+    lang.disabled = true;
+    ftr.textContent = '● RECORDING · ' + sessionId;
     document.getElementById('btnDownload').classList.remove('visible');
   } else {
     bar.className = 'status-bar done';
@@ -1090,9 +890,8 @@ function setUIRecording(on) {
     stTxt.textContent = `Recording complete · ${dur} · ${wc} words · Ready to generate`;
     btnS.disabled = false; btnS.classList.remove('active');
     btnSt.disabled = true;
-    box.classList.remove('active-rec', 'active-translate');
-  // (no language dropdown to re-enable)
-    tgl.disabled  = false;
+    box.classList.remove('active-rec');
+    lang.disabled = false;
     ftr.textContent = 'RECORDING COMPLETE · ' + sessionId;
     document.getElementById('recTimer').style.display = 'none';
   }
@@ -1103,9 +902,9 @@ function setStatus(type, msg) {
   document.getElementById('statusText').textContent = msg;
 }
 
-// ════════════════════════════════════════════
+// ════════════════════════════════════════════════════
 //  STATS
-// ════════════════════════════════════════════
+// ════════════════════════════════════════════════════
 function updateStats() {
   const text  = document.getElementById('transcript').value.trim();
   const words = text ? text.split(/\s+/).filter(Boolean).length : 0;
@@ -1114,109 +913,155 @@ function updateStats() {
   document.getElementById('lineCount').textContent = lines;
 }
 
-// ════════════════════════════════════════════
-//  FILE UPLOAD
-// ════════════════════════════════════════════
-const MAX_FILE_SIZE = 50 * 1024 * 1024;
+// ════════════════════════════════════════════════════
+//  FILE UPLOAD — TXT, PDF, DOCX with 50MB limit
+// ════════════════════════════════════════════════════
+const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
 
 function handleFileUpload(input) {
   const file = (input.files || [])[0];
   if (!file) return;
-  if (file.size > MAX_FILE_SIZE) { setStatus('error', `File too large — max 50MB`); return; }
+
+  if (file.size > MAX_FILE_SIZE) {
+    setStatus('error', `File too large — max 50MB (your file: ${(file.size / 1024 / 1024).toFixed(1)}MB)`);
+    return;
+  }
+
   const name = file.name.toLowerCase();
 
   if (name.endsWith('.txt')) {
+    // ── TXT ──
     const rd = new FileReader();
     rd.onload = (e) => {
       confirmedText = e.target.result.trim();
       document.getElementById('transcript').value = confirmedText;
       localStorage.setItem('px_transcript', confirmedText);
       updateStats();
-      setStatus('done', `Loaded: ${file.name} · ${confirmedText.split(/\s+/).filter(Boolean).length} words`);
+      const wc = confirmedText.split(/\s+/).filter(Boolean).length;
+      setStatus('done', `Loaded: ${file.name} · ${wc} words`);
       document.getElementById('btnDownload').classList.add('visible');
     };
     rd.readAsText(file);
 
   } else if (name.endsWith('.pdf')) {
-    setStatus('recording', `Reading PDF: ${file.name}...`);
+    // ── PDF ──
+    setStatus('recording', `Reading PDF: ${file.name} — please wait...`);
     const rd = new FileReader();
     rd.onload = async (e) => {
       try {
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-        const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(e.target.result) }).promise;
+        // Set worker source for PDF.js
+        pdfjsLib.GlobalWorkerOptions.workerSrc =
+          'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        const typedArray = new Uint8Array(e.target.result);
+        const pdf = await pdfjsLib.getDocument({ data: typedArray }).promise;
         let fullText = '';
+
         for (let i = 1; i <= pdf.numPages; i++) {
           const page = await pdf.getPage(i);
           const content = await page.getTextContent();
-          fullText += content.items.map(item => item.str).join(' ') + '\n';
+          const pageText = content.items.map(item => item.str).join(' ');
+          fullText += pageText + '\n';
         }
+
         confirmedText = fullText.trim();
         document.getElementById('transcript').value = confirmedText;
         localStorage.setItem('px_transcript', confirmedText);
         updateStats();
-        setStatus('done', `PDF loaded: ${file.name} · ${pdf.numPages} pages`);
+        const wc = confirmedText.split(/\s+/).filter(Boolean).length;
+        setStatus('done', `PDF loaded: ${file.name} · ${pdf.numPages} pages · ${wc} words`);
         document.getElementById('btnDownload').classList.add('visible');
-      } catch (err) { setStatus('error', `PDF read failed — ${err.message}`); }
+      } catch (err) {
+        setStatus('error', `PDF read failed — ${err.message}`);
+      }
     };
     rd.readAsArrayBuffer(file);
 
   } else if (name.endsWith('.docx')) {
-    setStatus('recording', `Reading DOCX: ${file.name}...`);
+    // ── DOCX ──
+    setStatus('recording', `Reading DOCX: ${file.name} — please wait...`);
     const rd = new FileReader();
     rd.onload = async (e) => {
       try {
-        const result = await mammoth.extractRawText({ arrayBuffer: e.target.result });
+        const arrayBuffer = e.target.result;
+        const result = await mammoth.extractRawText({ arrayBuffer });
         confirmedText = result.value.trim();
         document.getElementById('transcript').value = confirmedText;
         localStorage.setItem('px_transcript', confirmedText);
         updateStats();
-        setStatus('done', `DOCX loaded: ${file.name}`);
+        const wc = confirmedText.split(/\s+/).filter(Boolean).length;
+        setStatus('done', `DOCX loaded: ${file.name} · ${wc} words`);
         document.getElementById('btnDownload').classList.add('visible');
-      } catch (err) { setStatus('error', `DOCX read failed — ${err.message}`); }
+      } catch (err) {
+        setStatus('error', `DOCX read failed — ${err.message}`);
+      }
     };
     rd.readAsArrayBuffer(file);
+
   } else {
     setStatus('error', 'Unsupported file type — use .txt, .pdf, or .docx');
   }
 }
 
-// ════════════════════════════════════════════
-//  DOWNLOAD TRANSCRIPT
-// ════════════════════════════════════════════
+// ════════════════════════════════════════════════════
+//  DOWNLOAD TRANSCRIPT (+ SAVE TO SHAREPOINT)
+// ════════════════════════════════════════════════════
 async function downloadTranscript() {
   const text = document.getElementById('transcript').value.trim();
   if (!text) { alert('No transcript to download.'); return; }
+  
   const fileName = `transcript_${sessionId}_${new Date().toISOString().slice(0,10)}.txt`;
+  
+  // 1. DOWNLOAD TO LOCAL DEVICE
   const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = fileName;
   a.click();
   URL.revokeObjectURL(a.href);
-
+  
+  // 2. SAVE TO SHAREPOINT (async - doesn't block download)
   if (PA_SHAREPOINT_URL) {
     try {
       setStatus('recording', 'Saving to SharePoint...');
       const response = await fetch(PA_SHAREPOINT_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ fileName, fileContent: text, sessionId })
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          fileName: fileName,
+          fileContent: text,
+          sessionId: sessionId
+        })
       });
-      setStatus('done', response.ok ? '✓ Downloaded & saved to SharePoint' : '✓ Downloaded locally (SharePoint save failed)');
-    } catch { setStatus('done', '✓ Downloaded locally (SharePoint save failed)'); }
+      
+      if (response.ok) {
+        setStatus('done', `✓ Downloaded locally & saved to SharePoint`);
+      } else {
+        console.warn('SharePoint save failed:', response.status);
+        setStatus('done', `✓ Downloaded locally (SharePoint save failed)`);
+      }
+    } catch (error) {
+      console.error('Error saving to SharePoint:', error);
+      setStatus('done', `✓ Downloaded locally (SharePoint save failed)`);
+      // Download succeeded, just SharePoint save failed - don't alarm user
+    }
   }
 }
 
-// ════════════════════════════════════════════
+// ════════════════════════════════════════════════════
 //  GENERATE OUTPUT
-// ════════════════════════════════════════════
+// ════════════════════════════════════════════════════
 async function generateOutput(type) {
   const transcript = document.getElementById('transcript').value.trim();
   if (!transcript) { alert('Please record or upload a transcript first.'); return; }
+
   const labels = { mom: 'MoM', ropa: 'RoPA', dfd: 'DFD' };
   const label  = labels[type];
   setStatus('recording', `Sending to Power Automate — generating ${label}...`);
   document.getElementById('footerStatus').textContent = `GENERATING ${label}...`;
+
   const card = document.querySelector(`.card-${type}`);
   const origName = card.querySelector('.out-card-name').textContent;
   card.querySelector('.out-card-name').textContent = '⏳ Processing...';
@@ -1250,18 +1095,21 @@ async function generateOutput(type) {
   }
 }
 
-// ════════════════════════════════════════════
+// ════════════════════════════════════════════════════
 //  DRAG & DROP + MANUAL EDIT
-// ════════════════════════════════════════════
+// ════════════════════════════════════════════════════
 const ta = document.getElementById('transcript');
 ta.addEventListener('input', () => {
   confirmedText = ta.value;
   localStorage.setItem('px_transcript', confirmedText);
   updateStats();
 });
-ta.addEventListener('drop', (e) => { e.preventDefault(); const file = e.dataTransfer.files[0]; if (file) handleFileUpload({ files: [file] }); });
+ta.addEventListener('drop', (e) => {
+  e.preventDefault();
+  const file = e.dataTransfer.files[0];
+  if (file) handleFileUpload({ files: [file] });
+});
 ta.addEventListener('dragover', (e) => e.preventDefault());
-
 function handleDFDUpload(input) {
   const file = (input.files || [])[0];
   if (!file) return;
