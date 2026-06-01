@@ -784,9 +784,10 @@ let recentChunks = [];
 let lastChunkTime = 0;
 
 // Translation state
-let translateEnabled = true;
-let translateQueue   = [];
-let isTranslating    = false;
+let translateEnabled  = true;
+let translateQueue    = [];
+let isTranslating     = false;
+let lastFinalChunk    = '';   // tracks last accepted translated chunk (dedup for translation)
 
 window.addEventListener('DOMContentLoaded', () => {
   localStorage.removeItem('px_transcript');
@@ -844,17 +845,19 @@ async function translateToEnglish(text) {
   }
 }
 
-// Queue-based translation so chunks don't overlap
+// Queue-based translation — processes one chunk at a time
+// ALWAYS appends to confirmedText, never overwrites
 async function processTranslateQueue() {
   if (isTranslating || translateQueue.length === 0) return;
   isTranslating = true;
 
   while (translateQueue.length > 0) {
-    const chunk = translateQueue.shift();
+    const chunk      = translateQueue.shift();
     const translated = await translateToEnglish(chunk);
-    if (translated && translated !== lastFinalChunk) {
-      confirmedText += (confirmedText ? ' ' : '') + translated;
-      lastFinalChunk = translated;
+
+    if (translated && translated.trim()) {
+      // Always APPEND — never overwrite
+      confirmedText += (confirmedText ? ' ' : '') + translated.trim();
       localStorage.setItem('px_transcript', confirmedText);
       const box = document.getElementById('transcript');
       box.value = confirmedText;
@@ -1032,12 +1035,13 @@ function startRecording() {
   if (!SR_CLASS) { alert('Speech Recognition not supported.\nUse Chrome or Edge on desktop.'); return; }
   if (isRecording) return;
 
-  isRecording    = true;
-  confirmedText  = document.getElementById('transcript').value.trim();
-  translateQueue = [];
-  isTranslating  = false;
-  recentChunks   = [];    // fresh session — reset dedup
-  lastChunkTime  = 0;     // fresh session — reset throttle
+  isRecording      = true;
+  confirmedText    = document.getElementById('transcript').value.trim();
+  translateQueue   = [];
+  isTranslating    = false;
+  lastFinalChunk   = '';  // fresh session — reset translation dedup
+  recentChunks     = [];  // fresh session — reset speech dedup
+  lastChunkTime    = 0;   // fresh session — reset throttle
   currentLang    = document.getElementById('languageSelect').value;
 
   // Launch ONLY ONE listener first — this triggers the single mic
