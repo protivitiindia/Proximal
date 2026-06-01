@@ -976,10 +976,15 @@ function destroyAllListeners() {
 //  lang = 'auto' → all langs in parallel
 //  lang = 'hi-IN' etc → single listener only
 // ════════════════════════════════════════════
-function launchListeners(lang) {
+function launchListeners(lang, resetDedup = false) {
   destroyAllListeners();
-  recentChunks  = [];
-  lastChunkTime = 0;
+
+  // Only reset dedup on a FRESH recording start
+  // NOT on mid-recording language switch — that would wipe context
+  if (resetDedup) {
+    recentChunks  = [];
+    lastChunkTime = 0;
+  }
 
   const langs = (lang === 'auto') ? ALL_LANGS : [lang];
 
@@ -1002,7 +1007,9 @@ function switchLanguage(select) {
   if (!isRecording) return; // not recording — just update state, no restart needed
 
   // Kill current listeners and relaunch with new language
-  launchListeners(currentLang);
+  // resetDedup=false → confirmedText and dedup window are PRESERVED
+  // so old transcript is never wiped when switching language
+  launchListeners(currentLang, false);
   updateStatusBar();
 }
 
@@ -1029,6 +1036,8 @@ function startRecording() {
   confirmedText  = document.getElementById('transcript').value.trim();
   translateQueue = [];
   isTranslating  = false;
+  recentChunks   = [];    // fresh session — reset dedup
+  lastChunkTime  = 0;     // fresh session — reset throttle
   currentLang    = document.getElementById('languageSelect').value;
 
   // Launch ONLY ONE listener first — this triggers the single mic
@@ -1086,6 +1095,7 @@ function launchRemainingListeners(lang, skipLang) {
       try { r.start(); } catch(_) {}
     }, idx * 150);
   });
+  // NOTE: no dedup reset here — confirmedText must stay intact
 }
 
 // ════════════════════════════════════════════
