@@ -612,13 +612,40 @@ textarea#transcript.active-translate { border-color: rgba(0, 255, 213, 0.45); bo
             🎤 Start Recording
           </button>
 
-          <!-- Multilingual badge — no dropdown needed, all langs run in parallel -->
-          <div style="height:48px; padding:0 18px; border-radius:8px; border:1.5px solid rgba(57,255,20,0.35); background:rgba(57,255,20,0.04); display:inline-flex; align-items:center; gap:10px; box-shadow:0 0 12px rgba(57,255,20,0.1);">
-            <span style="font-size:16px;">🌍</span>
-            <div>
-              <div style="font-family:var(--mono); font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--text-muted);">Language Mode</div>
-              <div style="font-size:12px; font-weight:700; color:var(--neon-green); letter-spacing:0.5px;">AUTO · 20 Languages</div>
-            </div>
+          <!-- Language switcher — works DURING recording too -->
+          <div class="lang-wrap" style="min-width:200px;">
+            <select class="lang-select" id="languageSelect" onchange="switchLanguage(this)">
+              <option value="auto" selected>🌍 Auto (All Languages)</option>
+              <optgroup label="── Indian Languages ──">
+                <option value="hi-IN">Hindi</option>
+                <option value="bn-IN">Bengali</option>
+                <option value="te-IN">Telugu</option>
+                <option value="mr-IN">Marathi</option>
+                <option value="ta-IN">Tamil</option>
+                <option value="ur-IN">Urdu</option>
+                <option value="gu-IN">Gujarati</option>
+                <option value="kn-IN">Kannada</option>
+                <option value="ml-IN">Malayalam</option>
+                <option value="pa-IN">Punjabi</option>
+                <option value="en-IN">English (India)</option>
+              </optgroup>
+              <optgroup label="── International ──">
+                <option value="en-US">English (US)</option>
+                <option value="en-GB">English (UK)</option>
+                <option value="fr-FR">French</option>
+                <option value="de-DE">German</option>
+                <option value="es-ES">Spanish</option>
+                <option value="pt-BR">Portuguese (Brazil)</option>
+                <option value="it-IT">Italian</option>
+                <option value="ru-RU">Russian</option>
+                <option value="ar-SA">Arabic</option>
+                <option value="zh-CN">Chinese (Simplified)</option>
+                <option value="ja-JP">Japanese</option>
+                <option value="ko-KR">Korean</option>
+                <option value="tr-TR">Turkish</option>
+              </optgroup>
+            </select>
+            <span class="lang-arrow">▼</span>
           </div>
 
           <button class="nbtn nbtn-stop" id="btnStop" onclick="stopRecording()" disabled>
@@ -647,7 +674,7 @@ textarea#transcript.active-translate { border-color: rgba(0, 255, 213, 0.45); bo
 
         <!-- Translation notice bar -->
         <div id="translateNotice" style="margin-top:10px; padding:8px 14px; border-radius:7px; border:1px solid rgba(0,255,213,0.2); background:rgba(0,255,213,0.04); font-size:11.5px; color:var(--neon-teal); font-family:var(--mono); letter-spacing:0.5px; display:flex; align-items:center; gap:8px;">
-          🌐 &nbsp;<span>Live translation <strong>ON</strong> — Hindi · Bengali · Tamil · Telugu · Marathi · Gujarati · Kannada · Malayalam · Punjabi · Urdu + 10 more &nbsp;·&nbsp; All convert to English &nbsp;·&nbsp; Demo mode — use dummy data only</span>
+          🌐 &nbsp;<span>Live translation <strong>ON</strong> — speech in any language will be transcribed in English &nbsp;·&nbsp; Powered by Google Translate (demo mode — use dummy data only)</span>
         </div>
       </div>
 
@@ -737,48 +764,29 @@ const sessionId = `PX-${Date.now()}`;
 // ════════════════════════════════════════════
 const SR_CLASS = window.SpeechRecognition || window.webkitSpeechRecognition;
 
-// Parallel listener languages — covers all major Indian + international langs
-// Each listener runs simultaneously; whichever fires first wins that chunk
-const PARALLEL_LANGS = [
-  'hi-IN',   // Hindi
-  'bn-IN',   // Bengali
-  'ta-IN',   // Tamil
-  'te-IN',   // Telugu
-  'mr-IN',   // Marathi
-  'gu-IN',   // Gujarati
-  'kn-IN',   // Kannada
-  'ml-IN',   // Malayalam
-  'pa-IN',   // Punjabi
-  'ur-IN',   // Urdu
-  'en-IN',   // English (India)
-  'en-US',   // English (US)
-  'fr-FR',   // French
-  'de-DE',   // German
-  'es-ES',   // Spanish
-  'ar-SA',   // Arabic
-  'zh-CN',   // Chinese
-  'ja-JP',   // Japanese
-  'ko-KR',   // Korean
-  'ru-RU',   // Russian
+// All languages for AUTO mode
+const ALL_LANGS = [
+  'hi-IN','bn-IN','ta-IN','te-IN','mr-IN','gu-IN',
+  'kn-IN','ml-IN','pa-IN','ur-IN','en-IN','en-US',
+  'fr-FR','de-DE','es-ES','ar-SA','zh-CN','ja-JP','ko-KR','ru-RU'
 ];
 
-let recObjs        = [];     // array of parallel SpeechRecognition instances
+let recObjs        = [];      // active SpeechRecognition instances
 let isRecording    = false;
 let timerInterval  = null;
 let recSeconds     = 0;
 let confirmedText  = '';
+let currentLang    = 'auto';  // tracks selected language
 
-// Dedup: track last N accepted chunks to avoid same text from multiple listeners
-const DEDUP_WINDOW = 5;
-let recentChunks   = [];
+// Dedup
+const DEDUP_WIN  = 6;
+let recentChunks = [];
+let lastChunkTime = 0;
 
 // Translation state
 let translateEnabled = true;
 let translateQueue   = [];
 let isTranslating    = false;
-
-// Timestamp of last accepted chunk — throttle overlapping results
-let lastChunkTime  = 0;
 
 window.addEventListener('DOMContentLoaded', () => {
   localStorage.removeItem('px_transcript');
@@ -807,13 +815,13 @@ function updateTranslateUI() {
     status.classList.remove('off');
     badge.classList.add('visible');
     notice.style.display = 'flex';
-    box.placeholder = 'Speak freely in any language — Hindi, Bengali, Tamil, Telugu, Marathi, Gujarati, Kannada, Malayalam, Punjabi, Urdu, English, French, Arabic and more...\n\nEven switch languages mid-sentence — the transcript auto-converts to English.';
+    box.placeholder = 'Speak in any language — transcript will appear in English...\n\nTranslation powered by Google Translate (demo mode).';
   } else {
     status.textContent = 'OFF';
     status.classList.add('off');
     badge.classList.remove('visible');
     notice.style.display = 'none';
-    box.placeholder = 'Your transcript will appear here in real time as you speak freely in any language...\n\nSwitch languages mid-sentence — the app listens to 20 languages simultaneously.\nYou can also edit this text manually before generating outputs.';
+    box.placeholder = 'Your transcript will appear here in real time as you speak...\n\nSupports continuous speech with automatic punctuation.\nYou can also edit this text manually before generating outputs.';
   }
 }
 
@@ -859,28 +867,22 @@ async function processTranslateQueue() {
 }
 
 // ════════════════════════════════════════════
-//  DEDUP HELPER
-//  Checks if a chunk is too similar to recent ones
-//  Prevents multiple listeners firing for same speech
+//  DEDUP HELPERS
 // ════════════════════════════════════════════
 function isDuplicate(text) {
   const t = text.trim().toLowerCase();
   for (const r of recentChunks) {
-    // exact match
-    if (r === t) return true;
-    // one is substring of other (partial overlap)
-    if (t.includes(r) || r.includes(t)) return true;
+    if (r === t || t.includes(r) || r.includes(t)) return true;
   }
   return false;
 }
-
 function registerChunk(text) {
   recentChunks.push(text.trim().toLowerCase());
-  if (recentChunks.length > DEDUP_WINDOW) recentChunks.shift();
+  if (recentChunks.length > DEDUP_WIN) recentChunks.shift();
 }
 
 // ════════════════════════════════════════════
-//  BUILD ONE PARALLEL LISTENER
+//  BUILD ONE LISTENER for a given lang
 // ════════════════════════════════════════════
 function buildListener(lang) {
   const r = new SR_CLASS();
@@ -892,30 +894,27 @@ function buildListener(lang) {
   r.onresult = (e) => {
     for (let i = e.resultIndex; i < e.results.length; i++) {
       const chunk   = e.results[i][0].transcript;
-      const conf    = e.results[i][0].confidence || 0;
       const isFinal = e.results[i].isFinal;
 
       if (isFinal) {
         const trimmed = chunk.trim();
         if (!trimmed) continue;
-
-        // Throttle: ignore if another listener fired < 300ms ago
+        // Throttle — ignore if another listener fired < 300ms ago
         const now = Date.now();
         if (now - lastChunkTime < 300) continue;
-
-        // Dedup: ignore if same/similar text already accepted
+        // Dedup
         if (isDuplicate(trimmed)) continue;
 
-        // Accept this chunk
         lastChunkTime = now;
         registerChunk(trimmed);
 
         if (translateEnabled) {
           translateQueue.push(trimmed);
           processTranslateQueue();
-          setStatus('translating', `🌐 Translating... · ${lang.split('-')[0].toUpperCase()} detected`);
+          const langCode = lang.split('-')[0].toUpperCase();
+          setStatus('translating', `🌐 Translating... · ${langCode} detected`);
           setTimeout(() => {
-            if (isRecording) setStatus('recording', '🎤 Multilingual recording active — speak any language');
+            if (isRecording) updateStatusBar();
           }, 1400);
         } else {
           confirmedText += (confirmedText ? ' ' : '') + trimmed;
@@ -926,17 +925,15 @@ function buildListener(lang) {
           updateStats();
         }
       } else {
-        // Show interim from whichever listener is most active
+        // Show interim as light preview
+        const box = document.getElementById('transcript');
         if (translateEnabled) {
-          const box = document.getElementById('transcript');
           box.value = confirmedText + (chunk ? ' [' + chunk + ']' : '');
-          box.scrollTop = box.scrollHeight;
         } else {
-          const box = document.getElementById('transcript');
           box.value = confirmedText + (chunk ? ' ' + chunk : '');
-          box.scrollTop = box.scrollHeight;
           updateStats();
         }
+        box.scrollTop = box.scrollHeight;
       }
     }
   };
@@ -949,7 +946,7 @@ function buildListener(lang) {
     }
   };
 
-  // Auto-restart this individual listener when it stops
+  // Auto-restart this listener if it stops while recording is still active
   r.onend = () => {
     if (!isRecording) return;
     setTimeout(() => {
@@ -962,7 +959,7 @@ function buildListener(lang) {
 }
 
 // ════════════════════════════════════════════
-//  DESTROY ALL LISTENERS
+//  DESTROY ALL ACTIVE LISTENERS
 // ════════════════════════════════════════════
 function destroyAllListeners() {
   recObjs.forEach(r => {
@@ -975,7 +972,54 @@ function destroyAllListeners() {
 }
 
 // ════════════════════════════════════════════
-//  START — fires ALL parallel listeners at once
+//  LAUNCH LISTENERS for a given mode
+//  lang = 'auto' → all langs in parallel
+//  lang = 'hi-IN' etc → single listener only
+// ════════════════════════════════════════════
+function launchListeners(lang) {
+  destroyAllListeners();
+  recentChunks  = [];
+  lastChunkTime = 0;
+
+  const langs = (lang === 'auto') ? ALL_LANGS : [lang];
+
+  langs.forEach((l, idx) => {
+    setTimeout(() => {
+      if (!isRecording) return;
+      const r = buildListener(l);
+      recObjs.push(r);
+      try { r.start(); } catch(_) {}
+    }, idx * (lang === 'auto' ? 150 : 0));
+  });
+}
+
+// ════════════════════════════════════════════
+//  SWITCH LANGUAGE MID-RECORDING
+//  Called by the dropdown onchange
+// ════════════════════════════════════════════
+function switchLanguage(select) {
+  currentLang = select.value;
+  if (!isRecording) return; // not recording — just update state, no restart needed
+
+  // Kill current listeners and relaunch with new language
+  launchListeners(currentLang);
+  updateStatusBar();
+}
+
+// ════════════════════════════════════════════
+//  UPDATE STATUS BAR TEXT during recording
+// ════════════════════════════════════════════
+function updateStatusBar() {
+  const sel = document.getElementById('languageSelect');
+  const langLabel = sel.options[sel.selectedIndex].text;
+  const tMode = translateEnabled ? ' · 🌐 → English' : '';
+  setStatus('recording', `🎤 Listening in ${langLabel}${tMode}`);
+}
+
+// ════════════════════════════════════════════
+//  START RECORDING
+//  No getUserMedia — Web Speech API handles
+//  mic permission natively (one clean popup)
 // ════════════════════════════════════════════
 function startRecording() {
   if (!SR_CLASS) { alert('Speech Recognition not supported.\nUse Chrome or Edge on desktop.'); return; }
@@ -983,32 +1027,69 @@ function startRecording() {
 
   isRecording    = true;
   confirmedText  = document.getElementById('transcript').value.trim();
-  recentChunks   = [];
   translateQueue = [];
   isTranslating  = false;
-  lastChunkTime  = 0;
+  currentLang    = document.getElementById('languageSelect').value;
 
-  // Destroy any leftover listeners from previous session
-  destroyAllListeners();
+  // Launch ONLY ONE listener first — this triggers the single mic
+  // permission popup. Once user clicks Allow, that permission covers
+  // all subsequent listeners we add for the same session.
+  const firstLang = (currentLang === 'auto') ? ALL_LANGS[0] : currentLang;
+  const firstListener = buildListener(firstLang);
+  recObjs.push(firstListener);
 
-  // Build and start one listener per language — staggered by 80ms
-  // Stagger prevents browser from choking on simultaneous mic requests
-  PARALLEL_LANGS.forEach((lang, idx) => {
-    setTimeout(() => {
-      if (!isRecording) return;
-      const r = buildListener(lang);
-      recObjs.push(r);
-      try { r.start(); } catch(_) {}
-    }, idx * 80);
-  });
+  // Override onend for first listener to trigger the rest after permission granted
+  const origOnEnd = firstListener.onend;
+  let remainingLaunched = false;
+  firstListener.onend = () => {
+    // Launch remaining listeners after first one confirms mic access
+    if (!remainingLaunched && isRecording) {
+      remainingLaunched = true;
+      launchRemainingListeners(currentLang, firstLang);
+    }
+    // Then restore normal auto-restart behaviour
+    firstListener.onend = origOnEnd;
+    if (origOnEnd) origOnEnd();
+  };
+
+  try {
+    firstListener.start(); // triggers ONE mic permission popup
+  } catch(e) {
+    setStatus('error', 'Could not start: ' + e.message);
+    isRecording = false;
+    return;
+  }
+
+  // Also launch remaining after short delay as fallback
+  // (in case onend doesn't fire before first result)
+  setTimeout(() => {
+    if (isRecording && !remainingLaunched) {
+      remainingLaunched = true;
+      launchRemainingListeners(currentLang, firstLang);
+    }
+  }, 2000);
 
   setUIRecording(true);
   startTimer();
-  setStatus('recording', `🎤 Multilingual recording active — speak any language freely`);
+  updateStatusBar();
+}
+
+// Launch all listeners EXCEPT the one already started
+function launchRemainingListeners(lang, skipLang) {
+  if (lang !== 'auto') return; // single lang mode — only one listener needed
+  ALL_LANGS.forEach((l, idx) => {
+    if (l === skipLang) return; // already running
+    setTimeout(() => {
+      if (!isRecording) return;
+      const r = buildListener(l);
+      recObjs.push(r);
+      try { r.start(); } catch(_) {}
+    }, idx * 150);
+  });
 }
 
 // ════════════════════════════════════════════
-//  STOP
+//  STOP RECORDING
 // ════════════════════════════════════════════
 function stopRecording() {
   if (!isRecording) return;
@@ -1050,19 +1131,22 @@ function setUIRecording(on) {
   const btnSt = document.getElementById('btnStop');
   const box   = document.getElementById('transcript');
   const ftr   = document.getElementById('footerStatus');
-  // language dropdown removed — multilingual auto-detect
+  const lang  = document.getElementById('languageSelect');
   const tgl   = document.getElementById('translateToggle');
 
   if (on) {
     bar.className = 'status-bar recording';
+    const langLabel = lang.options[lang.selectedIndex].text;
     const tMode = translateEnabled ? ' · 🌐 → English' : '';
-    stTxt.textContent = `🎤 Multilingual recording active — speak any language${tMode}`;
+    stTxt.textContent = `🎤 Listening in ${langLabel}${tMode} — switch language anytime from dropdown`;
     btnS.disabled = true; btnS.classList.add('active');
     btnSt.disabled = false;
     box.classList.add('active-rec');
     if (translateEnabled) box.classList.add('active-translate');
+    // lang dropdown stays ENABLED so user can switch language mid-recording
+    lang.disabled = false;
     tgl.disabled  = true;
-    ftr.textContent = '● MULTILINGUAL RECORDING · ' + sessionId;
+    ftr.textContent = '● RECORDING · ' + sessionId;
     document.getElementById('btnDownload').classList.remove('visible');
   } else {
     bar.className = 'status-bar done';
@@ -1072,7 +1156,7 @@ function setUIRecording(on) {
     btnS.disabled = false; btnS.classList.remove('active');
     btnSt.disabled = true;
     box.classList.remove('active-rec', 'active-translate');
-  // (no language dropdown to re-enable)
+    lang.disabled = false;
     tgl.disabled  = false;
     ftr.textContent = 'RECORDING COMPLETE · ' + sessionId;
     document.getElementById('recTimer').style.display = 'none';
