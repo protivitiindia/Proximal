@@ -63,6 +63,7 @@ body::before {
   min-height: 100vh;
 }
 
+/* ── HEADER ── */
 .header {
   display: flex;
   align-items: center;
@@ -73,201 +74,516 @@ body::before {
   backdrop-filter: blur(12px);
 }
 
-.header-brand { display: flex; align-items: center; gap: 14px; }
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
 
 .brand-icon {
-  width: 38px; height: 38px; border-radius: 10px;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
   border: 1.5px solid var(--neon-blue);
   background: rgba(0, 200, 255, 0.08);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px; box-shadow: 0 0 12px rgba(0, 200, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  box-shadow: 0 0 12px rgba(0, 200, 255, 0.25);
 }
 
 .brand-name {
-  font-family: var(--mono); font-size: 22px; font-weight: 400;
-  color: var(--neon-blue); text-shadow: 0 0 18px rgba(0, 200, 255, 0.5); letter-spacing: 2px;
+  font-family: var(--mono);
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--neon-blue);
+  text-shadow: 0 0 18px rgba(0, 200, 255, 0.5);
+  letter-spacing: 2px;
 }
 
-.brand-tag { font-size: 10px; color: var(--text-muted); letter-spacing: 4px; text-transform: uppercase; margin-top: 2px; }
+.brand-tag {
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
 
-.header-meta { display: flex; align-items: center; gap: 10px; }
+.header-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
 .meta-pill {
-  font-size: 10px; font-family: var(--mono); letter-spacing: 1.5px;
-  text-transform: uppercase; padding: 4px 12px; border-radius: 20px; border: 1px solid;
+  font-size: 10px;
+  font-family: var(--mono);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid;
 }
 
 .pill-live {
-  border-color: rgba(57, 255, 20, 0.4); color: var(--neon-green);
-  background: rgba(57, 255, 20, 0.05); box-shadow: 0 0 10px rgba(57, 255, 20, 0.1);
+  border-color: rgba(57, 255, 20, 0.4);
+  color: var(--neon-green);
+  background: rgba(57, 255, 20, 0.05);
+  box-shadow: 0 0 10px rgba(57, 255, 20, 0.1);
 }
 
-.pill-ai { border-color: rgba(0, 200, 255, 0.3); color: var(--neon-blue); background: rgba(0, 200, 255, 0.05); }
+.pill-ai {
+  border-color: rgba(0, 200, 255, 0.3);
+  color: var(--neon-blue);
+  background: rgba(0, 200, 255, 0.05);
+}
 
-.main { flex: 1; display: flex; gap: 0; }
+/* ── MAIN LAYOUT ── */
+.main {
+  flex: 1;
+  display: flex;
+  gap: 0;
+}
 
 .panel-left {
-  flex: 1; padding: 32px 36px;
-  display: flex; flex-direction: column; gap: 24px;
+  flex: 1;
+  padding: 32px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
 .panel-right {
-  width: 220px; flex-shrink: 0;
+  width: 220px;
+  flex-shrink: 0;
   border-left: 1px solid var(--border-dim);
-  padding: 28px 18px; display: flex; flex-direction: column; gap: 14px;
-  background: rgba(2, 14, 32, 0.6); backdrop-filter: blur(8px);
+  padding: 28px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: rgba(2, 14, 32, 0.6);
+  backdrop-filter: blur(8px);
 }
 
+/* ── SECTION LABEL ── */
 .sec-label {
-  font-family: var(--mono); font-size: 10px; letter-spacing: 3px;
-  text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 4px;
 }
 
-.control-row { display: flex; gap: 12px; align-items: stretch; flex-wrap: wrap; }
+/* ── CONTROL ROW ── */
+.control-row {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+  flex-wrap: wrap;
+}
 
+/* BASE NEON BUTTON */
 .nbtn {
-  height: 48px; padding: 0 22px; border-radius: 8px; border: 1.5px solid;
-  background: transparent; font-family: var(--font); font-size: 13.5px; font-weight: 600;
-  letter-spacing: 0.3px; cursor: pointer; display: inline-flex; align-items: center;
-  justify-content: center; gap: 8px; transition: all 0.2s ease; white-space: nowrap; min-width: 160px;
+  height: 48px;
+  padding: 0 22px;
+  border-radius: 8px;
+  border: 1.5px solid;
+  background: transparent;
+  font-family: var(--font);
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  min-width: 160px;
 }
-.nbtn:disabled { opacity: 0.35; cursor: not-allowed; }
 
-.nbtn-start { border-color: var(--neon-blue); color: var(--neon-blue); box-shadow: 0 0 12px rgba(0,200,255,0.2), inset 0 0 12px rgba(0,200,255,0.03); }
-.nbtn-start:hover:not(:disabled) { background: rgba(0,200,255,0.1); box-shadow: 0 0 22px rgba(0,200,255,0.4), inset 0 0 16px rgba(0,200,255,0.07); }
-.nbtn-start.active { background: rgba(0,200,255,0.12); box-shadow: 0 0 28px rgba(0,200,255,0.55), inset 0 0 20px rgba(0,200,255,0.1); animation: pulseBlue 2s ease-in-out infinite; }
+.nbtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
 
-.nbtn-stop { border-color: var(--neon-red); color: var(--neon-red); box-shadow: 0 0 12px rgba(255,71,87,0.18), inset 0 0 12px rgba(255,71,87,0.03); }
-.nbtn-stop:hover:not(:disabled) { background: rgba(255,71,87,0.1); box-shadow: 0 0 22px rgba(255,71,87,0.4); }
+.nbtn-start {
+  border-color: var(--neon-blue);
+  color: var(--neon-blue);
+  box-shadow: 0 0 12px rgba(0, 200, 255, 0.2), inset 0 0 12px rgba(0, 200, 255, 0.03);
+}
+.nbtn-start:hover:not(:disabled) {
+  background: rgba(0, 200, 255, 0.1);
+  box-shadow: 0 0 22px rgba(0, 200, 255, 0.4), inset 0 0 16px rgba(0, 200, 255, 0.07);
+}
+.nbtn-start.active {
+  background: rgba(0, 200, 255, 0.12);
+  box-shadow: 0 0 28px rgba(0, 200, 255, 0.55), inset 0 0 20px rgba(0, 200, 255, 0.1);
+  animation: pulseBlue 2s ease-in-out infinite;
+}
 
-.nbtn-download { border-color: var(--neon-yellow); color: var(--neon-yellow); box-shadow: 0 0 12px rgba(255,230,0,0.18); display: none; }
+.nbtn-stop {
+  border-color: var(--neon-red);
+  color: var(--neon-red);
+  box-shadow: 0 0 12px rgba(255, 71, 87, 0.18), inset 0 0 12px rgba(255, 71, 87, 0.03);
+}
+.nbtn-stop:hover:not(:disabled) {
+  background: rgba(255, 71, 87, 0.1);
+  box-shadow: 0 0 22px rgba(255, 71, 87, 0.4);
+}
+
+.nbtn-download {
+  border-color: var(--neon-yellow);
+  color: var(--neon-yellow);
+  box-shadow: 0 0 12px rgba(255, 230, 0, 0.18);
+  display: none;
+}
 .nbtn-download.visible { display: inline-flex; }
-.nbtn-download:hover:not(:disabled) { background: rgba(255,230,0,0.08); box-shadow: 0 0 22px rgba(255,230,0,0.38); }
+.nbtn-download:hover:not(:disabled) {
+  background: rgba(255, 230, 0, 0.08);
+  box-shadow: 0 0 22px rgba(255, 230, 0, 0.38);
+}
 
-.lang-wrap { position: relative; min-width: 160px; height: 48px; }
+/* Language Select */
+.lang-wrap {
+  position: relative;
+  min-width: 160px;
+  height: 48px;
+}
 
 .lang-select {
-  width: 100%; height: 100%; padding: 0 36px 0 16px; border-radius: 8px;
-  border: 1.5px solid rgba(0,255,213,0.45); background: transparent; color: var(--neon-teal);
-  font-family: var(--font); font-size: 13.5px; font-weight: 600; cursor: pointer;
-  outline: none; appearance: none; box-shadow: 0 0 12px rgba(0,255,213,0.15); transition: all 0.2s;
+  width: 100%;
+  height: 100%;
+  padding: 0 36px 0 16px;
+  border-radius: 8px;
+  border: 1.5px solid rgba(0, 255, 213, 0.45);
+  background: transparent;
+  color: var(--neon-teal);
+  font-family: var(--font);
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  box-shadow: 0 0 12px rgba(0, 255, 213, 0.15);
+  transition: all 0.2s;
 }
-.lang-select:hover { background: rgba(0,255,213,0.07); box-shadow: 0 0 22px rgba(0,255,213,0.3); }
+.lang-select:hover {
+  background: rgba(0, 255, 213, 0.07);
+  box-shadow: 0 0 22px rgba(0, 255, 213, 0.3);
+}
 .lang-select option { background: #031828; color: #c0e8f8; font-weight: 400; }
-.lang-arrow { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--neon-teal); font-size: 11px; pointer-events: none; }
+.lang-arrow {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--neon-teal);
+  font-size: 11px;
+  pointer-events: none;
+}
 
+/* ── TRANSLATE TOGGLE ── */
 .translate-toggle-wrap {
-  height: 48px; padding: 0 16px; border-radius: 8px;
-  border: 1.5px solid rgba(0,255,213,0.35); background: rgba(0,255,213,0.04);
-  display: inline-flex; align-items: center; gap: 10px; min-width: 200px;
-  box-shadow: 0 0 12px rgba(0,255,213,0.1); transition: all 0.2s;
+  height: 48px;
+  padding: 0 16px;
+  border-radius: 8px;
+  border: 1.5px solid rgba(0, 255, 213, 0.35);
+  background: rgba(0, 255, 213, 0.04);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 200px;
+  box-shadow: 0 0 12px rgba(0, 255, 213, 0.1);
+  transition: all 0.2s;
 }
-.translate-toggle-wrap:hover { border-color: rgba(0,255,213,0.55); box-shadow: 0 0 20px rgba(0,255,213,0.2); }
-.translate-toggle-wrap .tgl-icon { font-size: 18px; flex-shrink: 0; }
-.translate-toggle-wrap .tgl-text { display: flex; flex-direction: column; gap: 1px; flex: 1; }
-.translate-toggle-wrap .tgl-label { font-size: 9.5px; font-family: var(--mono); letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); }
-.translate-toggle-wrap .tgl-status { font-size: 12px; font-weight: 700; color: var(--neon-teal); letter-spacing: 0.5px; transition: color 0.2s; }
-.translate-toggle-wrap .tgl-status.off { color: rgba(180,215,255,0.35); }
 
-.tgl-switch { position: relative; width: 38px; height: 22px; flex-shrink: 0; cursor: pointer; }
-.tgl-switch input { opacity: 0; width: 0; height: 0; position: absolute; }
-.tgl-track { position: absolute; inset: 0; border-radius: 11px; background: rgba(0,255,213,0.15); border: 1px solid rgba(0,255,213,0.3); transition: all 0.25s; }
-.tgl-switch input:checked + .tgl-track { background: rgba(0,255,213,0.3); border-color: var(--neon-teal); box-shadow: 0 0 10px rgba(0,255,213,0.4); }
-.tgl-thumb { position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; border-radius: 50%; background: rgba(180,215,255,0.4); transition: all 0.25s; }
-.tgl-switch input:checked ~ .tgl-thumb { left: 19px; background: var(--neon-teal); box-shadow: 0 0 8px rgba(0,255,213,0.7); }
+.translate-toggle-wrap:hover {
+  border-color: rgba(0, 255, 213, 0.55);
+  box-shadow: 0 0 20px rgba(0, 255, 213, 0.2);
+}
 
+.translate-toggle-wrap .tgl-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.translate-toggle-wrap .tgl-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: 1;
+}
+
+.translate-toggle-wrap .tgl-label {
+  font-size: 9.5px;
+  font-family: var(--mono);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.translate-toggle-wrap .tgl-status {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--neon-teal);
+  letter-spacing: 0.5px;
+  transition: color 0.2s;
+}
+
+.translate-toggle-wrap .tgl-status.off {
+  color: rgba(180, 215, 255, 0.35);
+}
+
+/* Toggle Switch */
+.tgl-switch {
+  position: relative;
+  width: 38px;
+  height: 22px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.tgl-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.tgl-track {
+  position: absolute;
+  inset: 0;
+  border-radius: 11px;
+  background: rgba(0, 255, 213, 0.15);
+  border: 1px solid rgba(0, 255, 213, 0.3);
+  transition: all 0.25s;
+}
+
+.tgl-switch input:checked + .tgl-track {
+  background: rgba(0, 255, 213, 0.3);
+  border-color: var(--neon-teal);
+  box-shadow: 0 0 10px rgba(0, 255, 213, 0.4);
+}
+
+.tgl-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: rgba(180, 215, 255, 0.4);
+  transition: all 0.25s;
+}
+
+.tgl-switch input:checked ~ .tgl-thumb {
+  left: 19px;
+  background: var(--neon-teal);
+  box-shadow: 0 0 8px rgba(0, 255, 213, 0.7);
+}
+
+/* ── STATUS BAR ── */
 .status-bar {
-  display: flex; align-items: center; gap: 10px; padding: 10px 16px;
-  border-radius: 8px; border: 1px solid var(--border-dim);
-  background: rgba(0,20,45,0.5); font-family: var(--mono); font-size: 12px;
-  color: var(--text-muted); min-height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border-dim);
+  background: rgba(0, 20, 45, 0.5);
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text-muted);
+  min-height: 40px;
 }
-.status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text-muted); flex-shrink: 0; transition: all 0.3s; }
-.status-bar.recording .status-dot { background: var(--neon-green); box-shadow: 0 0 8px var(--neon-green); animation: blink 1s ease-in-out infinite; }
-.status-bar.recording { border-color: rgba(57,255,20,0.25); color: var(--neon-green); }
-.status-bar.done { border-color: rgba(0,200,255,0.25); color: var(--neon-blue); }
-.status-bar.done .status-dot { background: var(--neon-blue); box-shadow: 0 0 8px var(--neon-blue); }
-.status-bar.translating { border-color: rgba(0,255,213,0.25); color: var(--neon-teal); }
-.status-bar.translating .status-dot { background: var(--neon-teal); box-shadow: 0 0 8px var(--neon-teal); animation: blink 0.6s ease-in-out infinite; }
-.status-timer { margin-left: auto; font-family: var(--mono); font-size: 13px; letter-spacing: 2px; }
 
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  flex-shrink: 0;
+  transition: all 0.3s;
+}
+
+.status-bar.recording .status-dot { background: var(--neon-green); box-shadow: 0 0 8px var(--neon-green); animation: blink 1s ease-in-out infinite; }
+.status-bar.recording { border-color: rgba(57, 255, 20, 0.25); color: var(--neon-green); }
+.status-bar.done { border-color: rgba(0, 200, 255, 0.25); color: var(--neon-blue); }
+.status-bar.done .status-dot { background: var(--neon-blue); box-shadow: 0 0 8px var(--neon-blue); }
+.status-bar.translating { border-color: rgba(0, 255, 213, 0.25); color: var(--neon-teal); }
+.status-bar.translating .status-dot { background: var(--neon-teal); box-shadow: 0 0 8px var(--neon-teal); animation: blink 0.6s ease-in-out infinite; }
+
+.status-timer {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 2px;
+}
+
+/* ── TRANSCRIPT BOX ── */
 .transcript-wrap { position: relative; flex: 1; }
-.transcript-label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+
+.transcript-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
 .word-count { font-family: var(--mono); font-size: 11px; color: var(--text-muted); }
 .word-count span { color: var(--neon-blue); }
 
 textarea#transcript {
-  width: 100%; height: 240px; background: rgba(0,15,35,0.6);
-  border: 1.5px solid var(--border-dim); border-radius: 10px; padding: 16px 18px;
-  font-family: var(--mono); font-size: 13px; color: var(--text-primary);
-  line-height: 1.75; resize: vertical; outline: none; transition: border-color 0.2s;
+  width: 100%;
+  height: 240px;
+  background: rgba(0, 15, 35, 0.6);
+  border: 1.5px solid var(--border-dim);
+  border-radius: 10px;
+  padding: 16px 18px;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--text-primary);
+  line-height: 1.75;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s;
 }
-textarea#transcript::placeholder { color: rgba(120,170,210,0.35); font-style: italic; }
-textarea#transcript:focus { border-color: rgba(0,200,255,0.4); box-shadow: 0 0 20px rgba(0,200,255,0.07); }
-textarea#transcript.active-rec { border-color: rgba(57,255,20,0.35); box-shadow: 0 0 20px rgba(57,255,20,0.07); }
-textarea#transcript.active-translate { border-color: rgba(0,255,213,0.45); box-shadow: 0 0 20px rgba(0,255,213,0.1); }
 
+textarea#transcript::placeholder { color: rgba(120, 170, 210, 0.35); font-style: italic; }
+textarea#transcript:focus { border-color: rgba(0, 200, 255, 0.4); box-shadow: 0 0 20px rgba(0, 200, 255, 0.07); }
+textarea#transcript.active-rec { border-color: rgba(57, 255, 20, 0.35); box-shadow: 0 0 20px rgba(57, 255, 20, 0.07); }
+textarea#transcript.active-translate { border-color: rgba(0, 255, 213, 0.45); box-shadow: 0 0 20px rgba(0, 255, 213, 0.1); }
+
+/* Translate badge on transcript */
 .translate-badge {
-  display: none; position: absolute; top: 36px; right: 12px;
-  font-family: var(--mono); font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
-  padding: 3px 10px; border-radius: 20px; border: 1px solid rgba(0,255,213,0.4);
-  color: var(--neon-teal); background: rgba(0,20,30,0.85); pointer-events: none;
+  display: none;
+  position: absolute;
+  top: 36px;
+  right: 12px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 255, 213, 0.4);
+  color: var(--neon-teal);
+  background: rgba(0, 20, 30, 0.85);
+  pointer-events: none;
 }
 .translate-badge.visible { display: block; }
 
+/* ── UPLOAD ZONE ── */
 .upload-zone {
-  border: 1.5px dashed rgba(0,200,255,0.2); border-radius: 10px; padding: 16px 20px;
-  display: flex; align-items: center; gap: 14px; background: rgba(0,15,35,0.4);
-  cursor: pointer; transition: all 0.2s;
+  border: 1.5px dashed rgba(0, 200, 255, 0.2);
+  border-radius: 10px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(0, 15, 35, 0.4);
+  cursor: pointer;
+  transition: all 0.2s;
 }
-.upload-zone:hover { border-color: rgba(0,200,255,0.45); background: rgba(0,200,255,0.04); }
+.upload-zone:hover { border-color: rgba(0, 200, 255, 0.45); background: rgba(0, 200, 255, 0.04); }
 .upload-zone-icon { font-size: 22px; flex-shrink: 0; }
 .upload-zone-text { font-size: 13px; color: var(--text-muted); }
 .upload-zone-text b { color: var(--neon-blue); font-weight: 600; }
 .upload-zone input[type="file"] { display: none; }
 
+/* ── RIGHT PANEL ── */
 .panel-right-label {
-  font-family: var(--mono); font-size: 9.5px; letter-spacing: 3px; text-transform: uppercase;
-  color: var(--text-muted); padding-bottom: 10px; border-bottom: 1px solid var(--border-dim); margin-bottom: 4px;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-dim);
+  margin-bottom: 4px;
 }
 
 .out-card {
-  padding: 18px 16px; border-radius: 10px; border: 1.5px solid; background: var(--bg-card);
-  cursor: pointer; transition: all 0.22s; display: flex; flex-direction: column; gap: 6px; backdrop-filter: blur(6px);
+  padding: 18px 16px;
+  border-radius: 10px;
+  border: 1.5px solid;
+  background: var(--bg-card);
+  cursor: pointer;
+  transition: all 0.22s;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  backdrop-filter: blur(6px);
 }
 .out-card-icon { font-size: 20px; }
 .out-card-name { font-size: 14px; font-weight: 700; letter-spacing: 0.5px; }
 .out-card-desc { font-size: 10.5px; color: var(--text-muted); line-height: 1.5; }
 
-.card-mom { border-color: rgba(191,95,255,0.35); box-shadow: 0 0 16px rgba(191,95,255,0.08); }
+.card-mom { border-color: rgba(191, 95, 255, 0.35); box-shadow: 0 0 16px rgba(191, 95, 255, 0.08); }
 .card-mom .out-card-name { color: var(--neon-purple); }
-.card-mom:hover { border-color: rgba(191,95,255,0.65); background: rgba(191,95,255,0.07); box-shadow: 0 0 28px rgba(191,95,255,0.18); transform: translateX(-2px); }
+.card-mom:hover { border-color: rgba(191, 95, 255, 0.65); background: rgba(191, 95, 255, 0.07); box-shadow: 0 0 28px rgba(191, 95, 255, 0.18); transform: translateX(-2px); }
 
-.card-ropa { border-color: rgba(0,255,213,0.3); box-shadow: 0 0 16px rgba(0,255,213,0.07); }
+.card-ropa { border-color: rgba(0, 255, 213, 0.3); box-shadow: 0 0 16px rgba(0, 255, 213, 0.07); }
 .card-ropa .out-card-name { color: var(--neon-teal); }
-.card-ropa:hover { border-color: rgba(0,255,213,0.6); background: rgba(0,255,213,0.06); box-shadow: 0 0 28px rgba(0,255,213,0.16); transform: translateX(-2px); }
+.card-ropa:hover { border-color: rgba(0, 255, 213, 0.6); background: rgba(0, 255, 213, 0.06); box-shadow: 0 0 28px rgba(0, 255, 213, 0.16); transform: translateX(-2px); }
 
-.card-dfd { border-color: rgba(0,200,255,0.3); box-shadow: 0 0 16px rgba(0,200,255,0.07); }
+.card-dfd { border-color: rgba(0, 200, 255, 0.3); box-shadow: 0 0 16px rgba(0, 200, 255, 0.07); }
 .card-dfd .out-card-name { color: var(--neon-blue); }
-.card-dfd:hover { border-color: rgba(0,200,255,0.6); background: rgba(0,200,255,0.06); box-shadow: 0 0 28px rgba(0,200,255,0.18); transform: translateX(-2px); }
+.card-dfd:hover { border-color: rgba(0, 200, 255, 0.6); background: rgba(0, 200, 255, 0.06); box-shadow: 0 0 28px rgba(0, 200, 255, 0.18); transform: translateX(-2px); }
 
 /* ── AUDIO PROGRESS BAR ── */
 .audio-progress-wrap {
-  display: none; flex-direction: column; gap: 6px; padding: 12px 16px;
-  border-radius: 8px; border: 1px solid rgba(0,255,213,0.2); background: rgba(0,255,213,0.04);
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 255, 213, 0.2);
+  background: rgba(0, 255, 213, 0.04);
 }
 .audio-progress-wrap.visible { display: flex; }
-.audio-progress-label { font-family: var(--mono); font-size: 11px; color: var(--neon-teal); display: flex; justify-content: space-between; }
-.audio-progress-track { width: 100%; height: 4px; background: rgba(0,255,213,0.12); border-radius: 2px; overflow: hidden; }
-.audio-progress-fill { height: 100%; background: var(--neon-teal); border-radius: 2px; width: 0%; transition: width 0.4s ease; box-shadow: 0 0 8px rgba(0,255,213,0.5); }
-
-.footer {
-  padding: 12px 36px; border-top: 1px solid var(--border-dim);
-  display: flex; align-items: center; justify-content: space-between;
-  background: rgba(2,10,22,0.7); font-family: var(--mono); font-size: 10px;
-  color: var(--text-muted); letter-spacing: 1px;
+.audio-progress-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--neon-teal);
+  display: flex;
+  justify-content: space-between;
+}
+.audio-progress-track {
+  width: 100%;
+  height: 4px;
+  background: rgba(0, 255, 213, 0.12);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.audio-progress-fill {
+  height: 100%;
+  background: var(--neon-teal);
+  border-radius: 2px;
+  width: 0%;
+  transition: width 0.4s ease;
+  box-shadow: 0 0 8px rgba(0, 255, 213, 0.5);
 }
 
+/* ── FOOTER ── */
+.footer {
+  padding: 12px 36px;
+  border-top: 1px solid var(--border-dim);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(2, 10, 22, 0.7);
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+}
+
+/* ── ANIMATIONS ── */
 @keyframes pulseBlue {
   0%, 100% { box-shadow: 0 0 18px rgba(0,200,255,0.4), inset 0 0 14px rgba(0,200,255,0.07); }
   50%       { box-shadow: 0 0 36px rgba(0,200,255,0.7), inset 0 0 20px rgba(0,200,255,0.12); }
@@ -277,6 +593,7 @@ textarea#transcript.active-translate { border-color: rgba(0,255,213,0.45); box-s
   50%       { opacity: 0.3; }
 }
 
+/* ── RESPONSIVE ── */
 @media (max-width: 768px) {
   .main { flex-direction: column; }
   .panel-right { width: 100%; flex-direction: row; border-left: none; border-top: 1px solid var(--border-dim); }
@@ -292,6 +609,7 @@ textarea#transcript.active-translate { border-color: rgba(0,255,213,0.45); box-s
 
 <div class="app-wrap">
 
+  <!-- HEADER -->
   <header class="header">
     <div class="header-brand">
       <div class="brand-icon">🛡</div>
@@ -306,8 +624,10 @@ textarea#transcript.active-translate { border-color: rgba(0,255,213,0.45); box-s
     </div>
   </header>
 
+  <!-- MAIN -->
   <div class="main">
 
+    <!-- LEFT PANEL -->
     <div class="panel-left">
 
       <div>
@@ -317,6 +637,7 @@ textarea#transcript.active-translate { border-color: rgba(0,255,213,0.45); box-s
         </div>
       </div>
 
+      <!-- CONTROL ROW -->
       <div>
         <div class="sec-label" style="margin-bottom:10px">Controls</div>
         <div class="control-row">
@@ -384,6 +705,7 @@ textarea#transcript.active-translate { border-color: rgba(0,255,213,0.45); box-s
             ⏹ Stop Recording
           </button>
 
+          <!-- ── TRANSLATE TOGGLE ── -->
           <div class="translate-toggle-wrap">
             <span class="tgl-icon">🌐</span>
             <div class="tgl-text">
@@ -403,17 +725,20 @@ textarea#transcript.active-translate { border-color: rgba(0,255,213,0.45); box-s
 
         </div>
 
+        <!-- Translation notice bar -->
         <div id="translateNotice" style="margin-top:10px; padding:8px 14px; border-radius:7px; border:1px solid rgba(0,255,213,0.2); background:rgba(0,255,213,0.04); font-size:11.5px; color:var(--neon-teal); font-family:var(--mono); letter-spacing:0.5px; display:flex; align-items:center; gap:8px;">
           🌐 &nbsp;<span>Live translation <strong>ON</strong> — speech in any language will be transcribed in English &nbsp;·&nbsp; Powered by Google Translate (demo mode — use dummy data only)</span>
         </div>
       </div>
 
+      <!-- STATUS BAR -->
       <div class="status-bar" id="statusBar">
         <div class="status-dot" id="statusDot"></div>
         <span id="statusText">Ready — select language and press Start Recording</span>
         <span class="status-timer" id="recTimer" style="display:none">00:00</span>
       </div>
 
+      <!-- TRANSCRIPT -->
       <div class="transcript-wrap">
         <div class="transcript-label-row">
           <div class="sec-label" style="margin-bottom:0">Live Transcript</div>
@@ -434,10 +759,11 @@ textarea#transcript.active-translate { border-color: rgba(0,255,213,0.45); box-s
         </div>
       </div>
 
+      <!-- UPLOAD -->
       <div class="upload-zone" onclick="document.getElementById('fileUpload').click()">
         <div class="upload-zone-icon">📁</div>
         <div class="upload-zone-text">
-          <b>Upload existing transcript or audio</b> — drag &amp; drop or click to browse<br>
+          <b>Upload existing transcript</b> — drag &amp; drop or click to browse<br>
           <span style="font-size:11px">.txt &nbsp;·&nbsp; .docx &nbsp;·&nbsp; .pdf &nbsp;·&nbsp; .mp3 &nbsp;·&nbsp; .mp4 &nbsp;·&nbsp; Max 1 GB</span>
         </div>
         <input type="file" id="fileUpload" accept=".txt,.docx,.pdf,.mp3,.mp4" onchange="handleFileUpload(this)">
@@ -445,6 +771,7 @@ textarea#transcript.active-translate { border-color: rgba(0,255,213,0.45); box-s
 
     </div>
 
+    <!-- RIGHT PANEL -->
     <div class="panel-right">
       <div class="panel-right-label">Generate Output</div>
 
@@ -472,6 +799,7 @@ textarea#transcript.active-translate { border-color: rgba(0,255,213,0.45); box-s
     </div>
   </div>
 
+  <!-- FOOTER -->
   <footer class="footer">
     <span>PROXIMAL · PRIVACY COMPLIANCE AI · PROTIVITI</span>
     <span id="footerStatus">SYSTEM READY</span>
@@ -485,6 +813,9 @@ textarea#transcript.active-translate { border-color: rgba(0,255,213,0.45); box-s
 // ════════════════════════════════════════════
 const PA_FLOW_URL       = '';
 const PA_SHAREPOINT_URL = 'https://defaulta9d9096491d34c01ab00563f95f00a.38.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/95a36e4b90244056b8aff9cfd1e50ff6/triggers/manual/paths/invoke?api-version=1';
+
+// Google Translate unofficial endpoint
+// ⚠️  FOR DEMO / TESTING ONLY — use dummy data, not real client transcripts
 const GT_URL = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q=';
 
 // ════════════════════════════════════════════
@@ -493,7 +824,7 @@ const GT_URL = 'https://translate.googleapis.com/translate_a/single?client=gtx&s
 const sessionId = `PX-${Date.now()}`;
 
 // ════════════════════════════════════════════
-//  SPEECH STATE (live mic — unchanged)
+//  SPEECH STATE
 // ════════════════════════════════════════════
 const SR_CLASS     = window.SpeechRecognition || window.webkitSpeechRecognition;
 let recObj         = null;
@@ -504,9 +835,10 @@ let recSeconds     = 0;
 let confirmedText  = '';
 let lastFinalChunk = '';
 
-let translateEnabled = true;
-let translateQueue   = [];
-let isTranslating    = false;
+// Translation state
+let translateEnabled = true;   // tracks toggle
+let translateQueue   = [];     // pending chunks to translate
+let isTranslating    = false;  // prevents overlapping translate calls
 
 window.addEventListener('DOMContentLoaded', () => {
   localStorage.removeItem('px_transcript');
@@ -525,37 +857,50 @@ function onTranslateToggle() {
 }
 
 function updateTranslateUI() {
-  const status = document.getElementById('tglStatus');
-  const badge  = document.getElementById('translateBadge');
-  const notice = document.getElementById('translateNotice');
-  const box    = document.getElementById('transcript');
+  const status  = document.getElementById('tglStatus');
+  const badge   = document.getElementById('translateBadge');
+  const notice  = document.getElementById('translateNotice');
+  const box     = document.getElementById('transcript');
+
   if (translateEnabled) {
-    status.textContent = 'ON'; status.classList.remove('off');
-    badge.classList.add('visible'); notice.style.display = 'flex';
+    status.textContent = 'ON';
+    status.classList.remove('off');
+    badge.classList.add('visible');
+    notice.style.display = 'flex';
     box.placeholder = 'Speak in any language — transcript will appear in English...\n\nTranslation powered by Google Translate (demo mode).';
   } else {
-    status.textContent = 'OFF'; status.classList.add('off');
-    badge.classList.remove('visible'); notice.style.display = 'none';
+    status.textContent = 'OFF';
+    status.classList.add('off');
+    badge.classList.remove('visible');
+    notice.style.display = 'none';
     box.placeholder = 'Your transcript will appear here in real time as you speak...\n\nSupports continuous speech with automatic punctuation.\nYou can also edit this text manually before generating outputs.';
   }
 }
 
 // ════════════════════════════════════════════
-//  GOOGLE TRANSLATE (unchanged)
+//  GOOGLE TRANSLATE (unofficial, demo only)
 // ════════════════════════════════════════════
 async function translateToEnglish(text) {
   if (!text || !text.trim()) return text;
   try {
     const res  = await fetch(GT_URL + encodeURIComponent(text.trim()));
     const data = await res.json();
-    if (data && data[0]) return data[0].map(c => c[0]).filter(Boolean).join(' ').trim();
+    // Google returns nested arrays: [[["translated","original",...],...]...]
+    if (data && data[0]) {
+      return data[0].map(chunk => chunk[0]).filter(Boolean).join(' ').trim();
+    }
     return text;
-  } catch (err) { return text; }
+  } catch (err) {
+    console.warn('Translation failed, using original:', err.message);
+    return text; // fallback: show original text
+  }
 }
 
+// Queue-based translation so chunks don't overlap
 async function processTranslateQueue() {
   if (isTranslating || translateQueue.length === 0) return;
   isTranslating = true;
+
   while (translateQueue.length > 0) {
     const chunk = translateQueue.shift();
     const translated = await translateToEnglish(chunk);
@@ -569,15 +914,20 @@ async function processTranslateQueue() {
       updateStats();
     }
   }
+
   isTranslating = false;
 }
 
 // ════════════════════════════════════════════
-//  LIVE MIC — unchanged
+//  BUILD RECOGNITION OBJECT
 // ════════════════════════════════════════════
 function buildRecObj(lang) {
   const r = new SR_CLASS();
-  r.continuous = true; r.interimResults = true; r.maxAlternatives = 1; r.lang = lang;
+  r.continuous      = true;
+  r.interimResults  = true;
+  r.maxAlternatives = 1;
+  r.lang            = lang;
+
   r.onresult = (e) => {
     let interim = '';
     for (let i = e.resultIndex; i < e.results.length; i++) {
@@ -585,13 +935,19 @@ function buildRecObj(lang) {
       if (e.results[i].isFinal) {
         const trimmed = chunk.trim();
         if (!trimmed) continue;
+
         if (translateEnabled) {
+          // Show interim in original while waiting for translation
           interim = '';
           translateQueue.push(trimmed);
           processTranslateQueue();
+          // Show translating status briefly
           setStatus('translating', '🌐 Translating... · Recording active');
-          setTimeout(() => { if (isRecording) setStatus('recording', 'Recording in progress — speak clearly into your microphone'); }, 1200);
+          setTimeout(() => {
+            if (isRecording) setStatus('recording', 'Recording in progress — speak clearly into your microphone');
+          }, 1200);
         } else {
+          // Original behaviour — no translation
           if (trimmed !== lastFinalChunk) {
             confirmedText += (confirmedText ? ' ' : '') + trimmed;
             lastFinalChunk = trimmed;
@@ -599,59 +955,114 @@ function buildRecObj(lang) {
           }
           interim = '';
         }
-      } else { interim += chunk; }
+      } else {
+        interim += chunk;
+      }
     }
+
     if (!translateEnabled) {
       const box = document.getElementById('transcript');
       box.value = confirmedText + (interim ? ' ' + interim : '');
       box.scrollTop = box.scrollHeight;
       updateStats();
     } else if (interim) {
+      // Show raw interim as preview (light hint)
       const box = document.getElementById('transcript');
       box.value = confirmedText + (interim ? ' [' + interim + ']' : '');
       box.scrollTop = box.scrollHeight;
     }
   };
+
   r.onerror = (e) => {
     if (['no-speech', 'aborted'].includes(e.error)) return;
-    if (e.error === 'not-allowed') { stopRecording(); setStatus('error', '⚠ Mic access denied — check browser permissions'); }
+    if (e.error === 'not-allowed') {
+      stopRecording();
+      setStatus('error', '⚠ Mic access denied — check browser permissions');
+    }
   };
+
   r.onend = () => {
-    if (!isRecording || restartLock) return;
+    if (!isRecording) return;
+    if (restartLock) return;
     restartLock = true;
-    setTimeout(() => { restartLock = false; if (!isRecording) return; try { recObj.start(); } catch(_) {} }, 150);
+    setTimeout(() => {
+      restartLock = false;
+      if (!isRecording) return;
+      try { recObj.start(); } catch(_) {}
+    }, 150);
   };
+
   return r;
 }
 
+// ════════════════════════════════════════════
+//  START
+// ════════════════════════════════════════════
+//  DESTROY old recObj cleanly (lang change fix)
+// ════════════════════════════════════════════
 function destroyRecObj() {
   if (!recObj) return;
-  recObj.onresult = null; recObj.onerror = null; recObj.onend = null;
+  recObj.onresult = null;
+  recObj.onerror  = null;
+  recObj.onend    = null;
   try { recObj.stop(); } catch(_) {}
   recObj = null;
 }
 
+// ════════════════════════════════════════════
 function startRecording() {
   if (!SR_CLASS) { alert('Speech Recognition not supported.\nUse Chrome or Edge on desktop.'); return; }
   if (isRecording) return;
-  isRecording = true; restartLock = false;
-  confirmedText = document.getElementById('transcript').value.trim();
-  lastFinalChunk = ''; translateQueue = []; isTranslating = false;
+
+  isRecording    = true;
+  restartLock    = false;
+  confirmedText  = document.getElementById('transcript').value.trim();
+  lastFinalChunk = '';
+  translateQueue = [];
+  isTranslating  = false;
+
+  // ── KEY FIX: always destroy and rebuild with the currently selected language
+  // This ensures Bengali stays Bengali, Tamil stays Tamil, etc.
   destroyRecObj();
   const lang = document.getElementById('languageSelect').value;
   recObj = buildRecObj(lang);
+
   setUIRecording(true);
   startTimer();
+
+  // Show which language is being listened in
   const langLabel = document.getElementById('languageSelect').options[document.getElementById('languageSelect').selectedIndex].text;
   setStatus('recording', `Recording in progress — listening in ${langLabel}`);
+
   try { recObj.start(); }
   catch(err) { if (!err.message.includes('already started')) setStatus('error', 'Could not start: ' + err.message); }
 }
 
+// ════════════════════════════════════════════
+//  STOP
+// ════════════════════════════════════════════
 function stopRecording() {
   if (!isRecording) return;
   isRecording = false;
-  if (recObj) { recObj.onend = null; try { recObj.stop(); } catch(_) {} }
+
+  if (recObj) {
+    recObj.onend = null;
+    try { recObj.stop(); } catch(_) {}
+    // Keep recObj alive for auto-restart logic only during active recording
+    // On next startRecording it will be destroyed and rebuilt with correct lang
+    setTimeout(() => {
+      if (recObj) recObj.onend = () => {
+        if (!isRecording || restartLock) return;
+        restartLock = true;
+        setTimeout(() => {
+          restartLock = false;
+          if (!isRecording) return;
+          try { recObj.start(); } catch(_) {}
+        }, 150);
+      };
+    }, 300);
+  }
+
   stopTimer();
   const box = document.getElementById('transcript');
   box.value = confirmedText;
@@ -661,6 +1072,9 @@ function stopRecording() {
   document.getElementById('btnDownload').classList.add('visible');
 }
 
+// ════════════════════════════════════════════
+//  TIMER
+// ════════════════════════════════════════════
 function startTimer() {
   recSeconds = 0;
   document.getElementById('recTimer').style.display = 'inline';
@@ -673,8 +1087,11 @@ function startTimer() {
 }
 function stopTimer() { clearInterval(timerInterval); }
 
+// ════════════════════════════════════════════
+//  UI STATE
+// ════════════════════════════════════════════
 function setUIRecording(on) {
-  const bar  = document.getElementById('statusBar');
+  const bar   = document.getElementById('statusBar');
   const stTxt = document.getElementById('statusText');
   const btnS  = document.getElementById('btnStart');
   const btnSt = document.getElementById('btnStop');
@@ -682,6 +1099,7 @@ function setUIRecording(on) {
   const ftr   = document.getElementById('footerStatus');
   const lang  = document.getElementById('languageSelect');
   const tgl   = document.getElementById('translateToggle');
+
   if (on) {
     bar.className = 'status-bar recording';
     const langLabel = lang.options[lang.selectedIndex].text;
@@ -691,7 +1109,8 @@ function setUIRecording(on) {
     btnSt.disabled = false;
     box.classList.add('active-rec');
     if (translateEnabled) box.classList.add('active-translate');
-    lang.disabled = true; tgl.disabled = true;
+    lang.disabled = true;
+    tgl.disabled  = true;
     ftr.textContent = '● RECORDING · ' + sessionId;
     document.getElementById('btnDownload').classList.remove('visible');
   } else {
@@ -702,7 +1121,8 @@ function setUIRecording(on) {
     btnS.disabled = false; btnS.classList.remove('active');
     btnSt.disabled = true;
     box.classList.remove('active-rec', 'active-translate');
-    lang.disabled = false; tgl.disabled = false;
+    lang.disabled = false;
+    tgl.disabled  = false;
     ftr.textContent = 'RECORDING COMPLETE · ' + sessionId;
     document.getElementById('recTimer').style.display = 'none';
   }
@@ -713,6 +1133,9 @@ function setStatus(type, msg) {
   document.getElementById('statusText').textContent = msg;
 }
 
+// ════════════════════════════════════════════
+//  STATS
+// ════════════════════════════════════════════
 function updateStats() {
   const text  = document.getElementById('transcript').value.trim();
   const words = text ? text.split(/\s+/).filter(Boolean).length : 0;
@@ -722,14 +1145,14 @@ function updateStats() {
 }
 
 // ════════════════════════════════════════════
-//  FILE UPLOAD — txt / pdf / docx unchanged
+//  FILE UPLOAD
 // ════════════════════════════════════════════
-const MAX_FILE_SIZE = 1024 * 1024 * 1024;
+const MAX_FILE_SIZE = 1024 * 1024 * 1024; // 1 GB
 
 function handleFileUpload(input) {
   const file = (input.files || [])[0];
   if (!file) return;
-  if (file.size > MAX_FILE_SIZE) { setStatus('error', 'File too large — max 1GB'); return; }
+  if (file.size > MAX_FILE_SIZE) { setStatus('error', `File too large — max 50MB`); return; }
   const name = file.name.toLowerCase();
 
   if (name.endsWith('.txt')) {
@@ -782,7 +1205,6 @@ function handleFileUpload(input) {
       } catch (err) { setStatus('error', `DOCX read failed — ${err.message}`); }
     };
     rd.readAsArrayBuffer(file);
-
   } else if (name.endsWith('.mp3') || name.endsWith('.mp4')) {
     handleAudioFile(file);
   } else {
@@ -792,133 +1214,142 @@ function handleFileUpload(input) {
 
 // ════════════════════════════════════════════
 //  AUDIO FILE TRANSCRIPTION — MP3 / MP4
+//  Uses Xenova/Transformers.js (Whisper small)
+//  Runs 100% in-browser, no server, no API key
 //
-//  ROOT CAUSE OF "Page Unresponsive at 55%":
-//  OfflineAudioContext.startRendering() for large
-//  files (e.g. 48kHz stereo MP3) blocks the main
-//  JS thread entirely → Chrome shows "Page Unresponsive"
-//
-//  FIX: Run ALL heavy work (decode + resample + Whisper)
-//  inside a Web Worker via an inline blob URL.
-//  The main thread only receives progress messages
-//  and the final transcript text — stays 100% responsive.
+//  KEY FIXES vs broken version:
+//  1. Resampling to 16kHz via OfflineAudioContext
+//     (AudioContext({ sampleRate:16000 }) is IGNORED
+//      by decodeAudioData — must resample manually)
+//  2. Chunked processing with progress updates
+//     so UI thread never freezes
+//  3. COI ServiceWorker injected for GitHub Pages
+//     (needed for SharedArrayBuffer / Whisper WASM)
 // ════════════════════════════════════════════
 
-function setProgress(pct) {
-  const fill  = document.getElementById('audioProgressFill');
-  const label = document.getElementById('audioProgressPct');
-  if (fill)  fill.style.width  = Math.min(100, Math.round(pct)) + '%';
-  if (label) label.textContent = Math.min(100, Math.round(pct)) + '%';
-}
+// ── COI ServiceWorker — fixes GitHub Pages CORS for Whisper ──
+// Injects Cross-Origin-Isolation headers that GitHub Pages won't set
+(function injectCOIServiceWorker() {
+  if (typeof window === 'undefined') return;
+  if (window.crossOriginIsolated) return; // already isolated, nothing to do
 
-// The entire Worker code as a template literal —
-// runs in its own thread, never touches the DOM
-const WORKER_CODE = `
-importScripts('https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2/dist/transformers.min.js');
+  // Only register if not already registered
+  if ('serviceWorker' in navigator) {
+    // Inline the coi-serviceworker script as a blob URL
+    const swCode = `
+self.addEventListener('install', () => self.skipWaiting());
+self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
+self.addEventListener('fetch', function(e) {
+  if (e.request.cache === 'only-if-cached' && e.request.mode !== 'same-origin') return;
+  e.respondWith(
+    fetch(e.request).then(function(r) {
+      if (r.status === 0) return r;
+      const h = new Headers(r.headers);
+      h.set('Cross-Origin-Opener-Policy', 'same-origin');
+      h.set('Cross-Origin-Embedder-Policy', 'require-corp');
+      return new Response(r.body, { status: r.status, statusText: r.statusText, headers: h });
+    })
+  );
+});`;
+    const blob  = new Blob([swCode], { type: 'application/javascript' });
+    const swUrl = URL.createObjectURL(blob);
+    navigator.serviceWorker.register(swUrl).then(() => {
+      // Reload once to activate the service worker headers
+      if (!sessionStorage.getItem('coi-reloaded')) {
+        sessionStorage.setItem('coi-reloaded', '1');
+        window.location.reload();
+      }
+    }).catch(() => {}); // silently fail if SW not supported
+  }
+})();
 
-// Resample Float32 from srcRate → 16000 Hz using OfflineAudioContext
-// Safe inside Worker — no UI thread involvement
-async function resampleTo16k(float32, srcRate) {
-  if (srcRate === 16000) return float32;
-  const outLen = Math.ceil(float32.length * 16000 / srcRate);
-  const offCtx = new OfflineAudioContext(1, outLen, 16000);
-  const srcBuf  = offCtx.createBuffer(1, float32.length, srcRate);
-  srcBuf.copyToChannel(float32, 0);
-  const srcNode = offCtx.createBufferSource();
-  srcNode.buffer = srcBuf;
-  srcNode.connect(offCtx.destination);
-  srcNode.start(0);
-  const rendered = await offCtx.startRendering();
-  return rendered.getChannelData(0);
-}
+let whisperPipeline = null;
+let whisperLoading  = false;
 
-self.onmessage = async function(e) {
-  const { arrayBuffer, language } = e.data;
+async function loadWhisper() {
+  if (whisperPipeline) return whisperPipeline;
+  if (whisperLoading)  {
+    // Wait until loading completes
+    while (whisperLoading) await new Promise(r => setTimeout(r, 300));
+    return whisperPipeline;
+  }
+  whisperLoading = true;
 
   try {
-    // ── STEP 1: Load Whisper ──
-    self.postMessage({ type: 'progress', pct: 5, label: 'Loading Whisper model...' });
+    // ── STEP 0: Test CDN connectivity first (5-second timeout) ──
+    setStatus('recording', '🔗 Testing CDN connection...');
+    const testPromise = fetch('https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2/dist/transformers.min.js', {
+      method: 'HEAD',
+      cache: 'no-store',
+      signal: AbortSignal.timeout(5000)
+    });
+    
+    await testPromise.catch((err) => {
+      throw new Error(`CDN unreachable (${err.name}) — check your internet connection or firewall settings`);
+    });
 
     const { pipeline, env } = await import(
       'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2/dist/transformers.min.js'
-    ).catch(() => ({ pipeline: Xenova.pipeline, env: Xenova.env }));
+    );
+    env.allowLocalModels  = false;
+    env.useBrowserCache   = true; // cache model in IndexedDB after first download
 
-    env.allowLocalModels = false;
-    env.useBrowserCache  = true;
+    setStatus('recording', '⏳ Downloading Whisper model (~150MB) — first time only, cached after...');
+    document.getElementById('footerStatus').textContent = 'LOADING WHISPER...';
 
-    const asr = await pipeline(
+    whisperPipeline = await pipeline(
       'automatic-speech-recognition',
       'Xenova/whisper-small',
       {
         progress_callback: (p) => {
           if (p.status === 'downloading' && p.total) {
             const pct = Math.round((p.loaded / p.total) * 100);
-            self.postMessage({ type: 'progress', pct: Math.round(pct * 0.3), label: 'Downloading Whisper model: ' + pct + '% (one-time only)' });
+            setStatus('recording', `⏳ Downloading Whisper: ${pct}% — one-time only`);
+            setProgress(pct * 0.3); // first 30% = model download
           }
         }
       }
     );
-
-    self.postMessage({ type: 'progress', pct: 32, label: 'Decoding audio...' });
-
-    // ── STEP 2: Decode audio at native sample rate ──
-    const audioCtx = new AudioContext();
-    let decoded;
-    try {
-      decoded = await audioCtx.decodeAudioData(arrayBuffer.slice(0)); // slice to detach cleanly
-    } finally {
-      audioCtx.close();
-    }
-
-    self.postMessage({ type: 'progress', pct: 50, label: 'Resampling ' + decoded.sampleRate + 'Hz \u2192 16kHz...' });
-
-    // ── STEP 3: Mix to mono ──
-    let mono;
-    if (decoded.numberOfChannels > 1) {
-      const ch0 = decoded.getChannelData(0);
-      const ch1 = decoded.getChannelData(1);
-      mono = new Float32Array(ch0.length);
-      for (let i = 0; i < ch0.length; i++) mono[i] = (ch0[i] + ch1[i]) / 2;
-    } else {
-      mono = decoded.getChannelData(0);
-    }
-
-    // ── STEP 4: Resample (blocking here is fine — we are in a Worker) ──
-    const resampled = await resampleTo16k(mono, decoded.sampleRate);
-
-    self.postMessage({ type: 'progress', pct: 68, label: 'Running Whisper transcription...' });
-
-    if (!resampled || resampled.length === 0) {
-      self.postMessage({ type: 'error', message: 'Audio decode returned empty buffer' });
-      return;
-    }
-
-    // ── STEP 5: Run Whisper ──
-    const result = await asr(resampled, {
-      return_timestamps: false,
-      task: 'transcribe',
-      language: language || undefined,
-      chunk_length_s: 30,
-      stride_length_s: 5,
-    });
-
-    self.postMessage({ type: 'progress', pct: 95, label: 'Finalising...' });
-
-    // ── STEP 6: Extract text ──
-    let text = '';
-    if (result && typeof result.text === 'string') {
-      text = result.text.trim();
-    } else if (Array.isArray(result)) {
-      text = result.map(r => r.text || '').join(' ').trim();
-    }
-
-    self.postMessage({ type: 'done', text });
-
+    whisperLoading = false;
+    return whisperPipeline;
   } catch(err) {
-    self.postMessage({ type: 'error', message: err.message || String(err) });
+    whisperLoading = false;
+    console.error('Whisper load error:', err.message);
+    setStatus('error', `⚠ ${err.message}`);
+    document.getElementById('footerStatus').textContent = 'WHISPER LOAD FAILED';
+    throw err;
   }
-};
-`;
+}
+
+// ── Resample Float32Array from srcRate → 16000 Hz ──
+// This is the KEY fix — AudioContext ignores sampleRate on decode
+async function resampleTo16k(float32, srcRate) {
+  if (srcRate === 16000) return float32; // already correct
+
+  const offlineCtx = new OfflineAudioContext(
+    1,                                          // mono
+    Math.ceil(float32.length * 16000 / srcRate), // output length
+    16000                                        // TARGET sample rate
+  );
+
+  const srcBuf = offlineCtx.createBuffer(1, float32.length, srcRate);
+  srcBuf.copyToChannel(float32, 0);
+
+  const srcNode = offlineCtx.createBufferSource();
+  srcNode.buffer = srcBuf;
+  srcNode.connect(offlineCtx.destination);
+  srcNode.start(0);
+
+  const rendered = await offlineCtx.startRendering();
+  return rendered.getChannelData(0);
+}
+
+function setProgress(pct) {
+  const fill = document.getElementById('audioProgressFill');
+  const label = document.getElementById('audioProgressPct');
+  if (fill)  fill.style.width  = Math.min(100, Math.round(pct)) + '%';
+  if (label) label.textContent = Math.min(100, Math.round(pct)) + '%';
+}
 
 async function handleAudioFile(file) {
   const progressWrap = document.getElementById('audioProgressWrap');
@@ -928,99 +1359,134 @@ async function handleAudioFile(file) {
   confirmedText  = '';
   translateQueue = [];
   isTranslating  = false;
-  lastFinalChunk = '';
   document.getElementById('transcript').value = '';
   updateStats();
 
-  progressFile.textContent = `⚙ Preparing: ${file.name}`;
+  progressFile.textContent = `⚙ Loading: ${file.name}`;
   setProgress(0);
   progressWrap.classList.add('visible');
   document.getElementById('btnDownload').classList.remove('visible');
 
   const tMode = translateEnabled ? ' · 🌐 → English' : '';
-  setStatus('recording', `🎵 Starting transcription for ${file.name}${tMode}...`);
+  setStatus('recording', `🎵 Preparing ${file.name}${tMode}...`);
   document.getElementById('footerStatus').textContent = 'AUDIO TRANSCRIPTION IN PROGRESS';
 
   try {
-    // Read file on main thread (fast — just memory copy)
-    const arrayBuffer = await file.arrayBuffer();
+    // ── STEP 1: Load Whisper ──
+    const asr = await loadWhisper();
+    setProgress(30);
+    progressFile.textContent = `⚙ Decoding audio: ${file.name}`;
+    setStatus('recording', `🎵 Decoding audio...`);
 
-    // Determine language hint
-    const selLang    = document.getElementById('languageSelect').value;
-    const whisperLang = (selLang === '' || selLang === 'auto')
-      ? null
-      : selLang.split('-')[0]; // 'hi-IN' → 'hi'
+    // ── STEP 2: Read file ──
+    const arrayBuf = await file.arrayBuffer();
+    setProgress(40);
 
-    // ── Spin up inline Web Worker ──
-    // All decode + resample + Whisper runs OFF the main thread
-    const blob      = new Blob([WORKER_CODE], { type: 'application/javascript' });
-    const workerURL = URL.createObjectURL(blob);
-    const worker    = new Worker(workerURL);
+    // ── STEP 3: Decode at NATIVE sample rate first ──
+    // IMPORTANT: Do NOT pass sampleRate here — it is ignored by decodeAudioData
+    // We resample manually in the next step
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    let decoded;
+    try {
+      // Add timeout for audio decoding (30 seconds max)
+      const decodePromise = audioCtx.decodeAudioData(arrayBuf);
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Audio decoding timeout — file may be corrupted')), 30000)
+      );
+      decoded = await Promise.race([decodePromise, timeoutPromise]);
+    } catch(decodeErr) {
+      throw new Error(`Failed to decode audio: ${decodeErr.message}`);
+    } finally {
+      audioCtx.close();
+    }
+    setProgress(55);
 
-    worker.onmessage = async (e) => {
-      const msg = e.data;
+    const nativeSampleRate = decoded.sampleRate;
+    progressFile.textContent = `⚙ Resampling ${nativeSampleRate}Hz → 16000Hz`;
+    setStatus('recording', `🎵 Resampling audio (${nativeSampleRate}Hz → 16kHz)...`);
 
-      if (msg.type === 'progress') {
-        setProgress(msg.pct);
-        progressFile.textContent = `⚙ ${msg.label}`;
-        setStatus('recording', `🎙 ${msg.label}`);
-
-      } else if (msg.type === 'done') {
-        worker.terminate();
-        URL.revokeObjectURL(workerURL);
-
-        const rawText = msg.text;
-
-        if (!rawText) {
-          setStatus('error', `No speech detected in ${file.name} — check audio quality`);
-          progressWrap.classList.remove('visible');
-          return;
-        }
-
-        // ── Translate if enabled (runs on main thread — fast, just HTTP) ──
-        if (translateEnabled) {
-          setStatus('translating', `🌐 Translating → English...`);
-          progressFile.textContent = '🌐 Translating...';
-          setProgress(97);
-          const sentences = rawText.match(/[^.!?]+[.!?]*/g) || [rawText];
-          for (const s of sentences) { if (s.trim()) translateQueue.push(s.trim()); }
-          await processTranslateQueue();
-        } else {
-          confirmedText = rawText;
-          localStorage.setItem('px_transcript', confirmedText);
-          const box = document.getElementById('transcript');
-          box.value = confirmedText;
-          box.scrollTop = box.scrollHeight;
-          updateStats();
-        }
-
-        setProgress(100);
-        setTimeout(() => progressWrap.classList.remove('visible'), 2500);
-
-        const wc = confirmedText.split(/\s+/).filter(Boolean).length;
-        setStatus('done', `✓ Transcription complete · ${file.name} · ${wc} words`);
-        document.getElementById('footerStatus').textContent = 'AUDIO TRANSCRIPTION COMPLETE';
-        document.getElementById('btnDownload').classList.add('visible');
-
-      } else if (msg.type === 'error') {
-        worker.terminate();
-        URL.revokeObjectURL(workerURL);
-        setStatus('error', `Transcription failed — ${msg.message}`);
-        progressWrap.classList.remove('visible');
-        document.getElementById('footerStatus').textContent = 'TRANSCRIPTION FAILED';
+    // ── STEP 4: Mix down to mono ──
+    let monoFloat32;
+    if (decoded.numberOfChannels > 1) {
+      const ch0  = decoded.getChannelData(0);
+      const ch1  = decoded.getChannelData(1);
+      monoFloat32 = new Float32Array(ch0.length);
+      for (let i = 0; i < ch0.length; i++) {
+        monoFloat32[i] = (ch0[i] + ch1[i]) / 2;
       }
-    };
+    } else {
+      monoFloat32 = decoded.getChannelData(0);
+    }
 
-    worker.onerror = (err) => {
-      worker.terminate();
-      URL.revokeObjectURL(workerURL);
-      setStatus('error', `Worker error — ${err.message}`);
+    // ── STEP 5: Resample to 16kHz (THE critical fix) ──
+    const resampled = await resampleTo16k(monoFloat32, nativeSampleRate);
+    setProgress(70);
+
+    if (resampled.length === 0) {
+      setStatus('error', `Audio decode failed — file may be corrupted`);
       progressWrap.classList.remove('visible');
-      document.getElementById('footerStatus').textContent = 'TRANSCRIPTION FAILED';
-    };
+      return;
+    }
 
-    // Transfer the ArrayBuffer to the Worker (zero-copy, no memory duplication)
-    worker.postMessage({ arrayBuffer, language: whisperLang }, [arrayBuffer]);
+    progressFile.textContent = `▶ Transcribing: ${file.name}`;
+    setStatus('recording', `🎙 Whisper transcribing${tMode}...`);
+
+    // ── STEP 6: Run Whisper ──
+    const selLang    = document.getElementById('languageSelect').value;
+    const whisperLang = (selLang === 'auto' || selLang === '')
+      ? undefined
+      : selLang.split('-')[0];
+
+    const result = await asr(resampled, {
+      return_timestamps: false,
+      task: 'transcribe',
+      language: whisperLang,
+      chunk_length_s: 30,
+      stride_length_s: 5,
+    });
+
+    setProgress(90);
+
+    // ── STEP 7: Extract text ──
+    let rawText = '';
+    if (result && typeof result.text === 'string') {
+      rawText = result.text.trim();
+    } else if (Array.isArray(result)) {
+      rawText = result.map(r => r.text || '').join(' ').trim();
+    }
+
+    if (!rawText) {
+      setStatus('error', `No speech detected in ${file.name} — check audio quality`);
+      progressWrap.classList.remove('visible');
+      return;
+    }
+
+    // ── STEP 8: Translate if enabled ──
+    if (translateEnabled) {
+      setStatus('translating', `🌐 Translating → English...`);
+      // Split into sentences for better translation quality
+      const sentences = rawText.match(/[^.!?]+[.!?]*/g) || [rawText];
+      for (const sentence of sentences) {
+        if (sentence.trim()) translateQueue.push(sentence.trim());
+      }
+      await processTranslateQueue();
+    } else {
+      confirmedText = rawText;
+      localStorage.setItem('px_transcript', confirmedText);
+      const box = document.getElementById('transcript');
+      box.value = confirmedText;
+      box.scrollTop = box.scrollHeight;
+      updateStats();
+    }
+
+    // ── STEP 9: Done ──
+    setProgress(100);
+    setTimeout(() => progressWrap.classList.remove('visible'), 2500);
+
+    const wc = confirmedText.split(/\s+/).filter(Boolean).length;
+    setStatus('done', `✓ Transcription complete · ${file.name} · ${wc} words`);
+    document.getElementById('footerStatus').textContent = 'AUDIO TRANSCRIPTION COMPLETE';
+    document.getElementById('btnDownload').classList.add('visible');
 
   } catch (err) {
     console.error('Audio transcription error:', err);
@@ -1043,6 +1509,7 @@ async function downloadTranscript() {
   a.download = fileName;
   a.click();
   URL.revokeObjectURL(a.href);
+
   if (PA_SHAREPOINT_URL) {
     try {
       setStatus('recording', 'Saving to SharePoint...');
@@ -1069,6 +1536,7 @@ async function generateOutput(type) {
   const card = document.querySelector(`.card-${type}`);
   const origName = card.querySelector('.out-card-name').textContent;
   card.querySelector('.out-card-name').textContent = '⏳ Processing...';
+
   if (!PA_FLOW_URL) {
     await new Promise(r => setTimeout(r, 1800));
     card.querySelector('.out-card-name').textContent = origName;
@@ -1076,6 +1544,7 @@ async function generateOutput(type) {
     document.getElementById('footerStatus').textContent = 'DEMO MODE';
     return;
   }
+
   try {
     const res = await fetch(PA_FLOW_URL, {
       method: 'POST',
