@@ -535,40 +535,6 @@ textarea#transcript.active-translate { border-color: rgba(0, 255, 213, 0.45); bo
 .card-dfd .out-card-name { color: var(--neon-blue); }
 .card-dfd:hover { border-color: rgba(0, 200, 255, 0.6); background: rgba(0, 200, 255, 0.06); box-shadow: 0 0 28px rgba(0, 200, 255, 0.18); transform: translateX(-2px); }
 
-/* ── AUDIO PROGRESS BAR ── */
-.audio-progress-wrap {
-  display: none;
-  flex-direction: column;
-  gap: 6px;
-  padding: 12px 16px;
-  border-radius: 8px;
-  border: 1px solid rgba(0, 255, 213, 0.2);
-  background: rgba(0, 255, 213, 0.04);
-}
-.audio-progress-wrap.visible { display: flex; }
-.audio-progress-label {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--neon-teal);
-  display: flex;
-  justify-content: space-between;
-}
-.audio-progress-track {
-  width: 100%;
-  height: 4px;
-  background: rgba(0, 255, 213, 0.12);
-  border-radius: 2px;
-  overflow: hidden;
-}
-.audio-progress-fill {
-  height: 100%;
-  background: var(--neon-teal);
-  border-radius: 2px;
-  width: 0%;
-  transition: width 0.4s ease;
-  box-shadow: 0 0 8px rgba(0, 255, 213, 0.5);
-}
-
 /* ── FOOTER ── */
 .footer {
   padding: 12px 36px;
@@ -646,10 +612,11 @@ textarea#transcript.active-translate { border-color: rgba(0, 255, 213, 0.45); bo
             🎤 Start Recording
           </button>
 
-          <div class="lang-wrap">
-            <select class="lang-select" id="languageSelect">
+          <!-- Language switcher — works DURING recording too -->
+          <div class="lang-wrap" style="min-width:200px;">
+            <select class="lang-select" id="languageSelect" onchange="switchLanguage(this)">
+              <option value="auto" selected>🌍 Auto (All Languages)</option>
               <optgroup label="── Indian Languages ──">
-                <option value="en-IN">English (India)</option>
                 <option value="hi-IN">Hindi</option>
                 <option value="bn-IN">Bengali</option>
                 <option value="te-IN">Telugu</option>
@@ -658,43 +625,23 @@ textarea#transcript.active-translate { border-color: rgba(0, 255, 213, 0.45); bo
                 <option value="ur-IN">Urdu</option>
                 <option value="gu-IN">Gujarati</option>
                 <option value="kn-IN">Kannada</option>
-                <option value="or-IN">Odia</option>
                 <option value="ml-IN">Malayalam</option>
                 <option value="pa-IN">Punjabi</option>
-                <option value="as-IN">Assamese</option>
-                <option value="mai-IN">Maithili</option>
-                <option value="kok-IN">Konkani</option>
-                <option value="sd-IN">Sindhi</option>
-                <option value="ks-IN">Kashmiri</option>
-                <option value="ne-IN">Nepali</option>
-                <option value="sa-IN">Sanskrit</option>
-                <option value="doi-IN">Dogri</option>
-                <option value="mni-IN">Manipuri</option>
-                <option value="sat-IN">Santali</option>
-                <option value="bho-IN">Bhojpuri</option>
+                <option value="en-IN">English (India)</option>
               </optgroup>
               <optgroup label="── International ──">
                 <option value="en-US">English (US)</option>
                 <option value="en-GB">English (UK)</option>
-                <option value="en-AU">English (Australia)</option>
                 <option value="fr-FR">French</option>
                 <option value="de-DE">German</option>
                 <option value="es-ES">Spanish</option>
                 <option value="pt-BR">Portuguese (Brazil)</option>
-                <option value="pt-PT">Portuguese (Portugal)</option>
                 <option value="it-IT">Italian</option>
-                <option value="nl-NL">Dutch</option>
-                <option value="pl-PL">Polish</option>
                 <option value="ru-RU">Russian</option>
                 <option value="ar-SA">Arabic</option>
                 <option value="zh-CN">Chinese (Simplified)</option>
-                <option value="zh-TW">Chinese (Traditional)</option>
                 <option value="ja-JP">Japanese</option>
                 <option value="ko-KR">Korean</option>
-                <option value="id-ID">Indonesian</option>
-                <option value="ms-MY">Malay</option>
-                <option value="th-TH">Thai</option>
-                <option value="vi-VN">Vietnamese</option>
                 <option value="tr-TR">Turkish</option>
               </optgroup>
             </select>
@@ -748,25 +695,14 @@ textarea#transcript.active-translate { border-color: rgba(0, 255, 213, 0.45); bo
         <textarea id="transcript" placeholder="Your transcript will appear here in real time as you speak...&#10;&#10;Supports continuous speech with automatic punctuation.&#10;You can also edit this text manually before generating outputs."></textarea>
       </div>
 
-      <!-- AUDIO PROGRESS BAR — shown during MP3/MP4 transcription -->
-      <div class="audio-progress-wrap" id="audioProgressWrap">
-        <div class="audio-progress-label">
-          <span id="audioProgressFile">▶ Transcribing audio...</span>
-          <span id="audioProgressPct">0%</span>
-        </div>
-        <div class="audio-progress-track">
-          <div class="audio-progress-fill" id="audioProgressFill"></div>
-        </div>
-      </div>
-
       <!-- UPLOAD -->
       <div class="upload-zone" onclick="document.getElementById('fileUpload').click()">
         <div class="upload-zone-icon">📁</div>
         <div class="upload-zone-text">
           <b>Upload existing transcript</b> — drag &amp; drop or click to browse<br>
-          <span style="font-size:11px">.txt &nbsp;·&nbsp; .docx &nbsp;·&nbsp; .pdf &nbsp;·&nbsp; .mp3 &nbsp;·&nbsp; .mp4 &nbsp;·&nbsp; Max 1 GB</span>
+          <span style="font-size:11px">.txt &nbsp;·&nbsp; .docx &nbsp;·&nbsp; .pdf &nbsp;·&nbsp; Max 50 MB</span>
         </div>
-        <input type="file" id="fileUpload" accept=".txt,.docx,.pdf,.mp3,.mp4" onchange="handleFileUpload(this)">
+        <input type="file" id="fileUpload" accept=".txt,.docx,.pdf" onchange="handleFileUpload(this)">
       </div>
 
     </div>
@@ -826,19 +762,32 @@ const sessionId = `PX-${Date.now()}`;
 // ════════════════════════════════════════════
 //  SPEECH STATE
 // ════════════════════════════════════════════
-const SR_CLASS     = window.SpeechRecognition || window.webkitSpeechRecognition;
-let recObj         = null;
+const SR_CLASS = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+// All languages for AUTO mode
+const ALL_LANGS = [
+  'hi-IN','bn-IN','ta-IN','te-IN','mr-IN','gu-IN',
+  'kn-IN','ml-IN','pa-IN','ur-IN','en-IN','en-US',
+  'fr-FR','de-DE','es-ES','ar-SA','zh-CN','ja-JP','ko-KR','ru-RU'
+];
+
+let recObjs        = [];      // active SpeechRecognition instances
 let isRecording    = false;
-let restartLock    = false;
 let timerInterval  = null;
 let recSeconds     = 0;
 let confirmedText  = '';
-let lastFinalChunk = '';
+let currentLang    = 'auto';  // tracks selected language
+
+// Dedup
+const DEDUP_WIN  = 6;
+let recentChunks = [];
+let lastChunkTime = 0;
 
 // Translation state
-let translateEnabled = true;   // tracks toggle
-let translateQueue   = [];     // pending chunks to translate
-let isTranslating    = false;  // prevents overlapping translate calls
+let translateEnabled  = true;
+let translateQueue    = [];
+let isTranslating     = false;
+let lastFinalChunk    = '';   // tracks last accepted translated chunk (dedup for translation)
 
 window.addEventListener('DOMContentLoaded', () => {
   localStorage.removeItem('px_transcript');
@@ -896,17 +845,19 @@ async function translateToEnglish(text) {
   }
 }
 
-// Queue-based translation so chunks don't overlap
+// Queue-based translation — processes one chunk at a time
+// ALWAYS appends to confirmedText, never overwrites
 async function processTranslateQueue() {
   if (isTranslating || translateQueue.length === 0) return;
   isTranslating = true;
 
   while (translateQueue.length > 0) {
-    const chunk = translateQueue.shift();
+    const chunk      = translateQueue.shift();
     const translated = await translateToEnglish(chunk);
-    if (translated && translated !== lastFinalChunk) {
-      confirmedText += (confirmedText ? ' ' : '') + translated;
-      lastFinalChunk = translated;
+
+    if (translated && translated.trim()) {
+      // Always APPEND — never overwrite
+      confirmedText += (confirmedText ? ' ' : '') + translated.trim();
       localStorage.setItem('px_transcript', confirmedText);
       const box = document.getElementById('transcript');
       box.value = confirmedText;
@@ -919,9 +870,24 @@ async function processTranslateQueue() {
 }
 
 // ════════════════════════════════════════════
-//  BUILD RECOGNITION OBJECT
+//  DEDUP HELPERS
 // ════════════════════════════════════════════
-function buildRecObj(lang) {
+function isDuplicate(text) {
+  const t = text.trim().toLowerCase();
+  for (const r of recentChunks) {
+    if (r === t || t.includes(r) || r.includes(t)) return true;
+  }
+  return false;
+}
+function registerChunk(text) {
+  recentChunks.push(text.trim().toLowerCase());
+  if (recentChunks.length > DEDUP_WIN) recentChunks.shift();
+}
+
+// ════════════════════════════════════════════
+//  BUILD ONE LISTENER for a given lang
+// ════════════════════════════════════════════
+function buildListener(lang) {
   const r = new SR_CLASS();
   r.continuous      = true;
   r.interimResults  = true;
@@ -929,139 +895,221 @@ function buildRecObj(lang) {
   r.lang            = lang;
 
   r.onresult = (e) => {
-    let interim = '';
     for (let i = e.resultIndex; i < e.results.length; i++) {
-      const chunk = e.results[i][0].transcript;
-      if (e.results[i].isFinal) {
+      const chunk   = e.results[i][0].transcript;
+      const isFinal = e.results[i].isFinal;
+
+      if (isFinal) {
         const trimmed = chunk.trim();
         if (!trimmed) continue;
+        // Throttle — ignore if another listener fired < 300ms ago
+        const now = Date.now();
+        if (now - lastChunkTime < 300) continue;
+        // Dedup
+        if (isDuplicate(trimmed)) continue;
+
+        lastChunkTime = now;
+        registerChunk(trimmed);
 
         if (translateEnabled) {
-          // Show interim in original while waiting for translation
-          interim = '';
           translateQueue.push(trimmed);
           processTranslateQueue();
-          // Show translating status briefly
-          setStatus('translating', '🌐 Translating... · Recording active');
+          const langCode = lang.split('-')[0].toUpperCase();
+          setStatus('translating', `🌐 Translating... · ${langCode} detected`);
           setTimeout(() => {
-            if (isRecording) setStatus('recording', 'Recording in progress — speak clearly into your microphone');
-          }, 1200);
+            if (isRecording) updateStatusBar();
+          }, 1400);
         } else {
-          // Original behaviour — no translation
-          if (trimmed !== lastFinalChunk) {
-            confirmedText += (confirmedText ? ' ' : '') + trimmed;
-            lastFinalChunk = trimmed;
-            localStorage.setItem('px_transcript', confirmedText);
-          }
-          interim = '';
+          confirmedText += (confirmedText ? ' ' : '') + trimmed;
+          localStorage.setItem('px_transcript', confirmedText);
+          const box = document.getElementById('transcript');
+          box.value = confirmedText;
+          box.scrollTop = box.scrollHeight;
+          updateStats();
         }
       } else {
-        interim += chunk;
+        // Show interim as light preview
+        const box = document.getElementById('transcript');
+        if (translateEnabled) {
+          box.value = confirmedText + (chunk ? ' [' + chunk + ']' : '');
+        } else {
+          box.value = confirmedText + (chunk ? ' ' + chunk : '');
+          updateStats();
+        }
+        box.scrollTop = box.scrollHeight;
       }
-    }
-
-    if (!translateEnabled) {
-      const box = document.getElementById('transcript');
-      box.value = confirmedText + (interim ? ' ' + interim : '');
-      box.scrollTop = box.scrollHeight;
-      updateStats();
-    } else if (interim) {
-      // Show raw interim as preview (light hint)
-      const box = document.getElementById('transcript');
-      box.value = confirmedText + (interim ? ' [' + interim + ']' : '');
-      box.scrollTop = box.scrollHeight;
     }
   };
 
   r.onerror = (e) => {
-    if (['no-speech', 'aborted'].includes(e.error)) return;
+    if (['no-speech', 'aborted', 'network'].includes(e.error)) return;
     if (e.error === 'not-allowed') {
       stopRecording();
       setStatus('error', '⚠ Mic access denied — check browser permissions');
     }
   };
 
+  // Auto-restart this listener if it stops while recording is still active
   r.onend = () => {
     if (!isRecording) return;
-    if (restartLock) return;
-    restartLock = true;
     setTimeout(() => {
-      restartLock = false;
       if (!isRecording) return;
-      try { recObj.start(); } catch(_) {}
-    }, 150);
+      try { r.start(); } catch(_) {}
+    }, 200);
   };
 
   return r;
 }
 
 // ════════════════════════════════════════════
-//  START
+//  DESTROY ALL ACTIVE LISTENERS
 // ════════════════════════════════════════════
-//  DESTROY old recObj cleanly (lang change fix)
-// ════════════════════════════════════════════
-function destroyRecObj() {
-  if (!recObj) return;
-  recObj.onresult = null;
-  recObj.onerror  = null;
-  recObj.onend    = null;
-  try { recObj.stop(); } catch(_) {}
-  recObj = null;
+function destroyAllListeners() {
+  recObjs.forEach(r => {
+    r.onresult = null;
+    r.onerror  = null;
+    r.onend    = null;
+    try { r.stop(); } catch(_) {}
+  });
+  recObjs = [];
 }
 
+// ════════════════════════════════════════════
+//  LAUNCH LISTENERS for a given mode
+//  lang = 'auto' → all langs in parallel
+//  lang = 'hi-IN' etc → single listener only
+// ════════════════════════════════════════════
+function launchListeners(lang, resetDedup = false) {
+  destroyAllListeners();
+
+  // Only reset dedup on a FRESH recording start
+  // NOT on mid-recording language switch — that would wipe context
+  if (resetDedup) {
+    recentChunks  = [];
+    lastChunkTime = 0;
+  }
+
+  const langs = (lang === 'auto') ? ALL_LANGS : [lang];
+
+  langs.forEach((l, idx) => {
+    setTimeout(() => {
+      if (!isRecording) return;
+      const r = buildListener(l);
+      recObjs.push(r);
+      try { r.start(); } catch(_) {}
+    }, idx * (lang === 'auto' ? 150 : 0));
+  });
+}
+
+// ════════════════════════════════════════════
+//  SWITCH LANGUAGE MID-RECORDING
+//  Called by the dropdown onchange
+// ════════════════════════════════════════════
+function switchLanguage(select) {
+  currentLang = select.value;
+  if (!isRecording) return; // not recording — just update state, no restart needed
+
+  // Kill current listeners and relaunch with new language
+  // resetDedup=false → confirmedText and dedup window are PRESERVED
+  // so old transcript is never wiped when switching language
+  launchListeners(currentLang, false);
+  updateStatusBar();
+}
+
+// ════════════════════════════════════════════
+//  UPDATE STATUS BAR TEXT during recording
+// ════════════════════════════════════════════
+function updateStatusBar() {
+  const sel = document.getElementById('languageSelect');
+  const langLabel = sel.options[sel.selectedIndex].text;
+  const tMode = translateEnabled ? ' · 🌐 → English' : '';
+  setStatus('recording', `🎤 Listening in ${langLabel}${tMode}`);
+}
+
+// ════════════════════════════════════════════
+//  START RECORDING
+//  No getUserMedia — Web Speech API handles
+//  mic permission natively (one clean popup)
 // ════════════════════════════════════════════
 function startRecording() {
   if (!SR_CLASS) { alert('Speech Recognition not supported.\nUse Chrome or Edge on desktop.'); return; }
   if (isRecording) return;
 
-  isRecording    = true;
-  restartLock    = false;
-  confirmedText  = document.getElementById('transcript').value.trim();
-  lastFinalChunk = '';
-  translateQueue = [];
-  isTranslating  = false;
+  isRecording      = true;
+  confirmedText    = document.getElementById('transcript').value.trim();
+  translateQueue   = [];
+  isTranslating    = false;
+  lastFinalChunk   = '';  // fresh session — reset translation dedup
+  recentChunks     = [];  // fresh session — reset speech dedup
+  lastChunkTime    = 0;   // fresh session — reset throttle
+  currentLang    = document.getElementById('languageSelect').value;
 
-  // ── KEY FIX: always destroy and rebuild with the currently selected language
-  // This ensures Bengali stays Bengali, Tamil stays Tamil, etc.
-  destroyRecObj();
-  const lang = document.getElementById('languageSelect').value;
-  recObj = buildRecObj(lang);
+  // Launch ONLY ONE listener first — this triggers the single mic
+  // permission popup. Once user clicks Allow, that permission covers
+  // all subsequent listeners we add for the same session.
+  const firstLang = (currentLang === 'auto') ? ALL_LANGS[0] : currentLang;
+  const firstListener = buildListener(firstLang);
+  recObjs.push(firstListener);
+
+  // Override onend for first listener to trigger the rest after permission granted
+  const origOnEnd = firstListener.onend;
+  let remainingLaunched = false;
+  firstListener.onend = () => {
+    // Launch remaining listeners after first one confirms mic access
+    if (!remainingLaunched && isRecording) {
+      remainingLaunched = true;
+      launchRemainingListeners(currentLang, firstLang);
+    }
+    // Then restore normal auto-restart behaviour
+    firstListener.onend = origOnEnd;
+    if (origOnEnd) origOnEnd();
+  };
+
+  try {
+    firstListener.start(); // triggers ONE mic permission popup
+  } catch(e) {
+    setStatus('error', 'Could not start: ' + e.message);
+    isRecording = false;
+    return;
+  }
+
+  // Also launch remaining after short delay as fallback
+  // (in case onend doesn't fire before first result)
+  setTimeout(() => {
+    if (isRecording && !remainingLaunched) {
+      remainingLaunched = true;
+      launchRemainingListeners(currentLang, firstLang);
+    }
+  }, 2000);
 
   setUIRecording(true);
   startTimer();
+  updateStatusBar();
+}
 
-  // Show which language is being listened in
-  const langLabel = document.getElementById('languageSelect').options[document.getElementById('languageSelect').selectedIndex].text;
-  setStatus('recording', `Recording in progress — listening in ${langLabel}`);
-
-  try { recObj.start(); }
-  catch(err) { if (!err.message.includes('already started')) setStatus('error', 'Could not start: ' + err.message); }
+// Launch all listeners EXCEPT the one already started
+function launchRemainingListeners(lang, skipLang) {
+  if (lang !== 'auto') return; // single lang mode — only one listener needed
+  ALL_LANGS.forEach((l, idx) => {
+    if (l === skipLang) return; // already running
+    setTimeout(() => {
+      if (!isRecording) return;
+      const r = buildListener(l);
+      recObjs.push(r);
+      try { r.start(); } catch(_) {}
+    }, idx * 150);
+  });
+  // NOTE: no dedup reset here — confirmedText must stay intact
 }
 
 // ════════════════════════════════════════════
-//  STOP
+//  STOP RECORDING
 // ════════════════════════════════════════════
 function stopRecording() {
   if (!isRecording) return;
   isRecording = false;
 
-  if (recObj) {
-    recObj.onend = null;
-    try { recObj.stop(); } catch(_) {}
-    // Keep recObj alive for auto-restart logic only during active recording
-    // On next startRecording it will be destroyed and rebuilt with correct lang
-    setTimeout(() => {
-      if (recObj) recObj.onend = () => {
-        if (!isRecording || restartLock) return;
-        restartLock = true;
-        setTimeout(() => {
-          restartLock = false;
-          if (!isRecording) return;
-          try { recObj.start(); } catch(_) {}
-        }, 150);
-      };
-    }, 300);
-  }
+  destroyAllListeners();
 
   stopTimer();
   const box = document.getElementById('transcript');
@@ -1104,12 +1152,13 @@ function setUIRecording(on) {
     bar.className = 'status-bar recording';
     const langLabel = lang.options[lang.selectedIndex].text;
     const tMode = translateEnabled ? ' · 🌐 → English' : '';
-    stTxt.textContent = `Recording in progress — listening in ${langLabel}${tMode}`;
+    stTxt.textContent = `🎤 Listening in ${langLabel}${tMode} — switch language anytime from dropdown`;
     btnS.disabled = true; btnS.classList.add('active');
     btnSt.disabled = false;
     box.classList.add('active-rec');
     if (translateEnabled) box.classList.add('active-translate');
-    lang.disabled = true;
+    // lang dropdown stays ENABLED so user can switch language mid-recording
+    lang.disabled = false;
     tgl.disabled  = true;
     ftr.textContent = '● RECORDING · ' + sessionId;
     document.getElementById('btnDownload').classList.remove('visible');
@@ -1147,7 +1196,7 @@ function updateStats() {
 // ════════════════════════════════════════════
 //  FILE UPLOAD
 // ════════════════════════════════════════════
-const MAX_FILE_SIZE = 1024 * 1024 * 1024; // 1 GB
+const MAX_FILE_SIZE = 50 * 1024 * 1024;
 
 function handleFileUpload(input) {
   const file = (input.files || [])[0];
@@ -1205,294 +1254,8 @@ function handleFileUpload(input) {
       } catch (err) { setStatus('error', `DOCX read failed — ${err.message}`); }
     };
     rd.readAsArrayBuffer(file);
-  } else if (name.endsWith('.mp3') || name.endsWith('.mp4')) {
-    handleAudioFile(file);
   } else {
-    setStatus('error', 'Unsupported file type — use .txt, .pdf, .docx, .mp3, or .mp4');
-  }
-}
-
-// ════════════════════════════════════════════
-//  AUDIO FILE TRANSCRIPTION — MP3 / MP4
-//  Uses Xenova/Transformers.js (Whisper small)
-//  Runs 100% in-browser, no server, no API key
-//
-//  KEY FIXES vs broken version:
-//  1. Resampling to 16kHz via OfflineAudioContext
-//     (AudioContext({ sampleRate:16000 }) is IGNORED
-//      by decodeAudioData — must resample manually)
-//  2. Chunked processing with progress updates
-//     so UI thread never freezes
-//  3. COI ServiceWorker injected for GitHub Pages
-//     (needed for SharedArrayBuffer / Whisper WASM)
-// ════════════════════════════════════════════
-
-// ── COI ServiceWorker — fixes GitHub Pages CORS for Whisper ──
-// Injects Cross-Origin-Isolation headers that GitHub Pages won't set
-(function injectCOIServiceWorker() {
-  if (typeof window === 'undefined') return;
-  if (window.crossOriginIsolated) return; // already isolated, nothing to do
-
-  // Only register if not already registered
-  if ('serviceWorker' in navigator) {
-    // Inline the coi-serviceworker script as a blob URL
-    const swCode = `
-self.addEventListener('install', () => self.skipWaiting());
-self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
-self.addEventListener('fetch', function(e) {
-  if (e.request.cache === 'only-if-cached' && e.request.mode !== 'same-origin') return;
-  e.respondWith(
-    fetch(e.request).then(function(r) {
-      if (r.status === 0) return r;
-      const h = new Headers(r.headers);
-      h.set('Cross-Origin-Opener-Policy', 'same-origin');
-      h.set('Cross-Origin-Embedder-Policy', 'require-corp');
-      return new Response(r.body, { status: r.status, statusText: r.statusText, headers: h });
-    })
-  );
-});`;
-    const blob  = new Blob([swCode], { type: 'application/javascript' });
-    const swUrl = URL.createObjectURL(blob);
-    navigator.serviceWorker.register(swUrl).then(() => {
-      // Reload once to activate the service worker headers
-      if (!sessionStorage.getItem('coi-reloaded')) {
-        sessionStorage.setItem('coi-reloaded', '1');
-        window.location.reload();
-      }
-    }).catch(() => {}); // silently fail if SW not supported
-  }
-})();
-
-let whisperPipeline = null;
-let whisperLoading  = false;
-
-async function loadWhisper() {
-  if (whisperPipeline) return whisperPipeline;
-  if (whisperLoading)  {
-    // Wait until loading completes
-    while (whisperLoading) await new Promise(r => setTimeout(r, 300));
-    return whisperPipeline;
-  }
-  whisperLoading = true;
-
-  try {
-    // ── STEP 0: Test CDN connectivity first (5-second timeout) ──
-    setStatus('recording', '🔗 Testing CDN connection...');
-    const testPromise = fetch('https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2/dist/transformers.min.js', {
-      method: 'HEAD',
-      cache: 'no-store',
-      signal: AbortSignal.timeout(5000)
-    });
-    
-    await testPromise.catch((err) => {
-      throw new Error(`CDN unreachable (${err.name}) — check your internet connection or firewall settings`);
-    });
-
-    const { pipeline, env } = await import(
-      'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2/dist/transformers.min.js'
-    );
-    env.allowLocalModels  = false;
-    env.useBrowserCache   = true; // cache model in IndexedDB after first download
-
-    setStatus('recording', '⏳ Downloading Whisper model (~150MB) — first time only, cached after...');
-    document.getElementById('footerStatus').textContent = 'LOADING WHISPER...';
-
-    whisperPipeline = await pipeline(
-      'automatic-speech-recognition',
-      'Xenova/whisper-small',
-      {
-        progress_callback: (p) => {
-          if (p.status === 'downloading' && p.total) {
-            const pct = Math.round((p.loaded / p.total) * 100);
-            setStatus('recording', `⏳ Downloading Whisper: ${pct}% — one-time only`);
-            setProgress(pct * 0.3); // first 30% = model download
-          }
-        }
-      }
-    );
-    whisperLoading = false;
-    return whisperPipeline;
-  } catch(err) {
-    whisperLoading = false;
-    console.error('Whisper load error:', err.message);
-    setStatus('error', `⚠ ${err.message}`);
-    document.getElementById('footerStatus').textContent = 'WHISPER LOAD FAILED';
-    throw err;
-  }
-}
-
-// ── Resample Float32Array from srcRate → 16000 Hz ──
-// This is the KEY fix — AudioContext ignores sampleRate on decode
-async function resampleTo16k(float32, srcRate) {
-  if (srcRate === 16000) return float32; // already correct
-
-  const offlineCtx = new OfflineAudioContext(
-    1,                                          // mono
-    Math.ceil(float32.length * 16000 / srcRate), // output length
-    16000                                        // TARGET sample rate
-  );
-
-  const srcBuf = offlineCtx.createBuffer(1, float32.length, srcRate);
-  srcBuf.copyToChannel(float32, 0);
-
-  const srcNode = offlineCtx.createBufferSource();
-  srcNode.buffer = srcBuf;
-  srcNode.connect(offlineCtx.destination);
-  srcNode.start(0);
-
-  const rendered = await offlineCtx.startRendering();
-  return rendered.getChannelData(0);
-}
-
-function setProgress(pct) {
-  const fill = document.getElementById('audioProgressFill');
-  const label = document.getElementById('audioProgressPct');
-  if (fill)  fill.style.width  = Math.min(100, Math.round(pct)) + '%';
-  if (label) label.textContent = Math.min(100, Math.round(pct)) + '%';
-}
-
-async function handleAudioFile(file) {
-  const progressWrap = document.getElementById('audioProgressWrap');
-  const progressFile = document.getElementById('audioProgressFile');
-
-  // Reset state
-  confirmedText  = '';
-  translateQueue = [];
-  isTranslating  = false;
-  document.getElementById('transcript').value = '';
-  updateStats();
-
-  progressFile.textContent = `⚙ Loading: ${file.name}`;
-  setProgress(0);
-  progressWrap.classList.add('visible');
-  document.getElementById('btnDownload').classList.remove('visible');
-
-  const tMode = translateEnabled ? ' · 🌐 → English' : '';
-  setStatus('recording', `🎵 Preparing ${file.name}${tMode}...`);
-  document.getElementById('footerStatus').textContent = 'AUDIO TRANSCRIPTION IN PROGRESS';
-
-  try {
-    // ── STEP 1: Load Whisper ──
-    const asr = await loadWhisper();
-    setProgress(30);
-    progressFile.textContent = `⚙ Decoding audio: ${file.name}`;
-    setStatus('recording', `🎵 Decoding audio...`);
-
-    // ── STEP 2: Read file ──
-    const arrayBuf = await file.arrayBuffer();
-    setProgress(40);
-
-    // ── STEP 3: Decode at NATIVE sample rate first ──
-    // IMPORTANT: Do NOT pass sampleRate here — it is ignored by decodeAudioData
-    // We resample manually in the next step
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    let decoded;
-    try {
-      // Add timeout for audio decoding (30 seconds max)
-      const decodePromise = audioCtx.decodeAudioData(arrayBuf);
-      const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Audio decoding timeout — file may be corrupted')), 30000)
-      );
-      decoded = await Promise.race([decodePromise, timeoutPromise]);
-    } catch(decodeErr) {
-      throw new Error(`Failed to decode audio: ${decodeErr.message}`);
-    } finally {
-      audioCtx.close();
-    }
-    setProgress(55);
-
-    const nativeSampleRate = decoded.sampleRate;
-    progressFile.textContent = `⚙ Resampling ${nativeSampleRate}Hz → 16000Hz`;
-    setStatus('recording', `🎵 Resampling audio (${nativeSampleRate}Hz → 16kHz)...`);
-
-    // ── STEP 4: Mix down to mono ──
-    let monoFloat32;
-    if (decoded.numberOfChannels > 1) {
-      const ch0  = decoded.getChannelData(0);
-      const ch1  = decoded.getChannelData(1);
-      monoFloat32 = new Float32Array(ch0.length);
-      for (let i = 0; i < ch0.length; i++) {
-        monoFloat32[i] = (ch0[i] + ch1[i]) / 2;
-      }
-    } else {
-      monoFloat32 = decoded.getChannelData(0);
-    }
-
-    // ── STEP 5: Resample to 16kHz (THE critical fix) ──
-    const resampled = await resampleTo16k(monoFloat32, nativeSampleRate);
-    setProgress(70);
-
-    if (resampled.length === 0) {
-      setStatus('error', `Audio decode failed — file may be corrupted`);
-      progressWrap.classList.remove('visible');
-      return;
-    }
-
-    progressFile.textContent = `▶ Transcribing: ${file.name}`;
-    setStatus('recording', `🎙 Whisper transcribing${tMode}...`);
-
-    // ── STEP 6: Run Whisper ──
-    const selLang    = document.getElementById('languageSelect').value;
-    const whisperLang = (selLang === 'auto' || selLang === '')
-      ? undefined
-      : selLang.split('-')[0];
-
-    const result = await asr(resampled, {
-      return_timestamps: false,
-      task: 'transcribe',
-      language: whisperLang,
-      chunk_length_s: 30,
-      stride_length_s: 5,
-    });
-
-    setProgress(90);
-
-    // ── STEP 7: Extract text ──
-    let rawText = '';
-    if (result && typeof result.text === 'string') {
-      rawText = result.text.trim();
-    } else if (Array.isArray(result)) {
-      rawText = result.map(r => r.text || '').join(' ').trim();
-    }
-
-    if (!rawText) {
-      setStatus('error', `No speech detected in ${file.name} — check audio quality`);
-      progressWrap.classList.remove('visible');
-      return;
-    }
-
-    // ── STEP 8: Translate if enabled ──
-    if (translateEnabled) {
-      setStatus('translating', `🌐 Translating → English...`);
-      // Split into sentences for better translation quality
-      const sentences = rawText.match(/[^.!?]+[.!?]*/g) || [rawText];
-      for (const sentence of sentences) {
-        if (sentence.trim()) translateQueue.push(sentence.trim());
-      }
-      await processTranslateQueue();
-    } else {
-      confirmedText = rawText;
-      localStorage.setItem('px_transcript', confirmedText);
-      const box = document.getElementById('transcript');
-      box.value = confirmedText;
-      box.scrollTop = box.scrollHeight;
-      updateStats();
-    }
-
-    // ── STEP 9: Done ──
-    setProgress(100);
-    setTimeout(() => progressWrap.classList.remove('visible'), 2500);
-
-    const wc = confirmedText.split(/\s+/).filter(Boolean).length;
-    setStatus('done', `✓ Transcription complete · ${file.name} · ${wc} words`);
-    document.getElementById('footerStatus').textContent = 'AUDIO TRANSCRIPTION COMPLETE';
-    document.getElementById('btnDownload').classList.add('visible');
-
-  } catch (err) {
-    console.error('Audio transcription error:', err);
-    setStatus('error', `Transcription failed — ${err.message}`);
-    progressWrap.classList.remove('visible');
-    document.getElementById('footerStatus').textContent = 'TRANSCRIPTION FAILED';
+    setStatus('error', 'Unsupported file type — use .txt, .pdf, or .docx');
   }
 }
 
