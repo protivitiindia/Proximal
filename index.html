@@ -424,6 +424,46 @@ body::before {
   letter-spacing: 2px;
 }
 
+/* ── AUDIO PROGRESS ── */
+#audioProgressWrap {
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  background: rgba(0, 20, 45, 0.6);
+  border-radius: 8px;
+  border: 1px solid rgba(0, 200, 255, 0.2);
+}
+#audioProgressWrap.visible { display: flex; }
+
+#audioProgressFile {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-family: var(--mono);
+}
+
+.audio-progress-bar {
+  height: 6px;
+  background: rgba(0, 200, 255, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 200, 255, 0.2);
+}
+
+#audioProgressFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--neon-blue), var(--neon-teal));
+  width: 0%;
+  transition: width 0.1s linear;
+}
+
+#audioProgressPct {
+  font-size: 11px;
+  color: var(--neon-blue);
+  font-family: var(--mono);
+  text-align: right;
+}
+
 /* ── TRANSCRIPT BOX ── */
 .transcript-wrap { position: relative; flex: 1; }
 
@@ -599,7 +639,7 @@ textarea#transcript.active-translate { border-color: rgba(0, 255, 213, 0.45); bo
       <div>
         <div class="sec-label">Session Recording</div>
         <div style="font-size:13px;color:var(--text-muted);margin-top:4px;line-height:1.6">
-          Record your compliance walkthrough or upload an existing transcript. Select language, start recording — speech converts to text in real time.
+          Record your compliance walkthrough or upload an existing transcript/audio file. Select language, start recording — speech converts to text in real time.
         </div>
       </div>
 
@@ -685,6 +725,15 @@ textarea#transcript.active-translate { border-color: rgba(0, 255, 213, 0.45); bo
         <span class="status-timer" id="recTimer" style="display:none">00:00</span>
       </div>
 
+      <!-- AUDIO UPLOAD PROGRESS -->
+      <div id="audioProgressWrap">
+        <div id="audioProgressFile">⚙ Loading audio file...</div>
+        <div class="audio-progress-bar">
+          <div id="audioProgressFill"></div>
+        </div>
+        <div id="audioProgressPct">0%</div>
+      </div>
+
       <!-- TRANSCRIPT -->
       <div class="transcript-wrap">
         <div class="transcript-label-row">
@@ -699,10 +748,10 @@ textarea#transcript.active-translate { border-color: rgba(0, 255, 213, 0.45); bo
       <div class="upload-zone" onclick="document.getElementById('fileUpload').click()">
         <div class="upload-zone-icon">📁</div>
         <div class="upload-zone-text">
-          <b>Upload existing transcript</b> — drag &amp; drop or click to browse<br>
-          <span style="font-size:11px">.txt &nbsp;·&nbsp; .docx &nbsp;·&nbsp; .pdf &nbsp;·&nbsp; Max 50 MB</span>
+          <b>Upload existing transcript or audio</b> — drag &amp; drop or click to browse<br>
+          <span style="font-size:11px">.txt &nbsp;·&nbsp; .docx &nbsp;·&nbsp; .pdf &nbsp;·&nbsp; .mp4 &nbsp;·&nbsp; .wav &nbsp;·&nbsp; Max 1 GB</span>
         </div>
-        <input type="file" id="fileUpload" accept=".txt,.docx,.pdf" onchange="handleFileUpload(this)">
+        <input type="file" id="fileUpload" accept=".txt,.docx,.pdf,.mp4,.wav,.m4a,.webm,.flac,.ogg" onchange="handleFileUpload(this)">
       </div>
 
     </div>
@@ -758,6 +807,17 @@ const GT_URL = 'https://translate.googleapis.com/translate_a/single?client=gtx&s
 //  SESSION
 // ════════════════════════════════════════════
 const sessionId = `PX-${Date.now()}`;
+
+// ════════════════════════════════════════════
+//  FILE UPLOAD
+// ════════════════════════════════════════════
+const MAX_FILE_SIZE = 1 * 1024 * 1024 * 1024; // 1GB
+
+// ════════════════════════════════════════════
+//  WHISPER STATE
+// ════════════════════════════════════════════
+let whisperPipeline = null;
+let whisperLoading  = false;
 
 // ════════════════════════════════════════════
 //  SPEECH STATE
@@ -1194,16 +1254,259 @@ function updateStats() {
 }
 
 // ════════════════════════════════════════════
-//  FILE UPLOAD
+//  WHISPER AI - LOAD PIPELINE
 // ════════════════════════════════════════════
-const MAX_FILE_SIZE = 50 * 1024 * 1024;
+async function loadWhisper() {
+  if (whisperPipeline) {
+    while (whisperLoading) await new Promise(r => setTimeout(r, 300));
+    return whisperPipeline;
+  }
+  whisperLoading = true;
 
+  try {
+    // ── STEP 0: Test CDN connectivity first (5-second timeout) ──
+    setStatus('recording', '🔗 Testing CDN connection...');
+    const testPromise = fetch('https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2/dist/transformers.min.js', {
+      method: 'HEAD',
+      cache: 'no-store',
+      signal: AbortSignal.timeout(5000)
+    });
+    
+    await testPromise.catch((err) => {
+      throw new Error(`CDN unreachable (${err.name}) — check your internet connection or firewall settings`);
+    });
+
+    const { pipeline, env } = await import(
+      'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2/dist/transformers.min.js'
+    );
+    env.allowLocalModels  = false;
+    env.useBrowserCache   = true; // cache model in IndexedDB after first download
+
+    setStatus('recording', '⏳ Downloading Whisper model (~150MB) — first time only, cached after...');
+    document.getElementById('footerStatus').textContent = 'LOADING WHISPER...';
+
+    whisperPipeline = await pipeline(
+      'automatic-speech-recognition',
+      'Xenova/whisper-small',
+      {
+        progress_callback: (p) => {
+          if (p.status === 'downloading' && p.total) {
+            const pct = Math.round((p.loaded / p.total) * 100);
+            setStatus('recording', `⏳ Downloading Whisper: ${pct}% — one-time only`);
+            setProgress(pct * 0.3); // first 30% = model download
+          }
+        }
+      }
+    );
+    whisperLoading = false;
+    return whisperPipeline;
+  } catch(err) {
+    whisperLoading = false;
+    console.error('Whisper load error:', err.message);
+    setStatus('error', `⚠ ${err.message}`);
+    document.getElementById('footerStatus').textContent = 'WHISPER LOAD FAILED';
+    throw err;
+  }
+}
+
+// ════════════════════════════════════════════
+//  RESAMPLE TO 16KHz
+// ════════════════════════════════════════════
+async function resampleTo16k(float32, srcRate) {
+  if (srcRate === 16000) return float32; // already correct
+
+  const offlineCtx = new OfflineAudioContext(
+    1,                                          // mono
+    Math.ceil(float32.length * 16000 / srcRate), // output length
+    16000                                        // TARGET sample rate
+  );
+
+  const srcBuf = offlineCtx.createBuffer(1, float32.length, srcRate);
+  srcBuf.copyToChannel(float32, 0);
+
+  const srcNode = offlineCtx.createBufferSource();
+  srcNode.buffer = srcBuf;
+  srcNode.connect(offlineCtx.destination);
+  srcNode.start(0);
+
+  const rendered = await offlineCtx.startRendering();
+  return rendered.getChannelData(0);
+}
+
+// ════════════════════════════════════════════
+//  PROGRESS HELPERS
+// ════════════════════════════════════════════
+function setProgress(pct) {
+  const fill = document.getElementById('audioProgressFill');
+  const label = document.getElementById('audioProgressPct');
+  if (fill)  fill.style.width  = Math.min(100, Math.round(pct)) + '%';
+  if (label) label.textContent = Math.min(100, Math.round(pct)) + '%';
+}
+
+// ════════════════════════════════════════════
+//  HANDLE AUDIO FILE UPLOAD
+// ════════════════════════════════════════════
+async function handleAudioFile(file) {
+  const progressWrap = document.getElementById('audioProgressWrap');
+  const progressFile = document.getElementById('audioProgressFile');
+
+  // Reset state
+  confirmedText  = '';
+  translateQueue = [];
+  isTranslating  = false;
+  document.getElementById('transcript').value = '';
+  updateStats();
+
+  progressFile.textContent = `⚙ Loading: ${file.name}`;
+  setProgress(0);
+  progressWrap.classList.add('visible');
+  document.getElementById('btnDownload').classList.remove('visible');
+
+  const tMode = translateEnabled ? ' · 🌐 → English' : '';
+  setStatus('recording', `🎵 Preparing ${file.name}${tMode}...`);
+  document.getElementById('footerStatus').textContent = 'AUDIO TRANSCRIPTION IN PROGRESS';
+
+  try {
+    // ── STEP 1: Load Whisper ──
+    const asr = await loadWhisper();
+    setProgress(30);
+    progressFile.textContent = `⚙ Decoding audio: ${file.name}`;
+    setStatus('recording', `🎵 Decoding audio...`);
+
+    // ── STEP 2: Read file ──
+    const arrayBuf = await file.arrayBuffer();
+    setProgress(40);
+
+    // ── STEP 3: Decode at NATIVE sample rate first ──
+    // IMPORTANT: Do NOT pass sampleRate here — it is ignored by decodeAudioData
+    // We resample manually in the next step
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    let decoded;
+    try {
+      // Add timeout for audio decoding (30 seconds max)
+      const decodePromise = audioCtx.decodeAudioData(arrayBuf);
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Audio decoding timeout — file may be corrupted')), 30000)
+      );
+      decoded = await Promise.race([decodePromise, timeoutPromise]);
+    } catch(decodeErr) {
+      throw new Error(`Failed to decode audio: ${decodeErr.message}`);
+    } finally {
+      audioCtx.close();
+    }
+    setProgress(55);
+
+    const nativeSampleRate = decoded.sampleRate;
+    progressFile.textContent = `⚙ Resampling ${nativeSampleRate}Hz → 16000Hz`;
+    setStatus('recording', `🎵 Resampling audio (${nativeSampleRate}Hz → 16kHz)...`);
+
+    // ── STEP 4: Mix down to mono ──
+    let monoFloat32;
+    if (decoded.numberOfChannels > 1) {
+      const ch0  = decoded.getChannelData(0);
+      const ch1  = decoded.getChannelData(1);
+      monoFloat32 = new Float32Array(ch0.length);
+      for (let i = 0; i < ch0.length; i++) {
+        monoFloat32[i] = (ch0[i] + ch1[i]) / 2;
+      }
+    } else {
+      monoFloat32 = decoded.getChannelData(0);
+    }
+
+    // ── STEP 5: Resample to 16kHz (THE critical fix) ──
+    const resampled = await resampleTo16k(monoFloat32, nativeSampleRate);
+    setProgress(70);
+
+    if (resampled.length === 0) {
+      setStatus('error', `Audio decode failed — file may be corrupted`);
+      progressWrap.classList.remove('visible');
+      return;
+    }
+
+    progressFile.textContent = `▶ Transcribing: ${file.name}`;
+    setStatus('recording', `🎙 Whisper transcribing${tMode}...`);
+
+    // ── STEP 6: Run Whisper ──
+    const selLang    = document.getElementById('languageSelect').value;
+    const whisperLang = (selLang === 'auto' || selLang === '')
+      ? undefined
+      : selLang.split('-')[0];
+
+    const result = await asr(resampled, {
+      return_timestamps: false,
+      task: 'transcribe',
+      language: whisperLang,
+      chunk_length_s: 30,
+      stride_length_s: 5,
+    });
+
+    setProgress(90);
+
+    // ── STEP 7: Extract text ──
+    let rawText = '';
+    if (result && typeof result.text === 'string') {
+      rawText = result.text.trim();
+    } else if (Array.isArray(result)) {
+      rawText = result.map(r => r.text || '').join(' ').trim();
+    }
+
+    if (!rawText) {
+      setStatus('error', `No speech detected in ${file.name} — check audio quality`);
+      progressWrap.classList.remove('visible');
+      return;
+    }
+
+    // ── STEP 8: Translate if enabled ──
+    if (translateEnabled) {
+      setStatus('translating', `🌐 Translating → English...`);
+      // Split into sentences for better translation quality
+      const sentences = rawText.match(/[^.!?]+[.!?]*/g) || [rawText];
+      for (const sentence of sentences) {
+        if (sentence.trim()) translateQueue.push(sentence.trim());
+      }
+      await processTranslateQueue();
+    } else {
+      confirmedText = rawText;
+      localStorage.setItem('px_transcript', confirmedText);
+      const box = document.getElementById('transcript');
+      box.value = confirmedText;
+      box.scrollTop = box.scrollHeight;
+      updateStats();
+    }
+
+    // ── STEP 9: Done ──
+    setProgress(100);
+    setTimeout(() => progressWrap.classList.remove('visible'), 2500);
+
+    const wc = confirmedText.split(/\s+/).filter(Boolean).length;
+    setStatus('done', `✓ Transcription complete · ${file.name} · ${wc} words`);
+    document.getElementById('footerStatus').textContent = 'AUDIO TRANSCRIPTION COMPLETE';
+    document.getElementById('btnDownload').classList.add('visible');
+
+  } catch (err) {
+    console.error('Audio transcription error:', err);
+    setStatus('error', `Transcription failed — ${err.message}`);
+    progressWrap.classList.remove('visible');
+    document.getElementById('footerStatus').textContent = 'TRANSCRIPTION FAILED';
+  }
+}
+
+// ════════════════════════════════════════════
+//  FILE UPLOAD HANDLER
+// ════════════════════════════════════════════
 function handleFileUpload(input) {
   const file = (input.files || [])[0];
   if (!file) return;
-  if (file.size > MAX_FILE_SIZE) { setStatus('error', `File too large — max 50MB`); return; }
+  if (file.size > MAX_FILE_SIZE) { setStatus('error', `File too large — max 1GB`); return; }
   const name = file.name.toLowerCase();
 
+  // Audio files — use Whisper
+  if (['.mp4', '.wav', '.m4a', '.webm', '.flac', '.ogg', '.aac', '.wma'].some(ext => name.endsWith(ext))) {
+    handleAudioFile(file);
+    return;
+  }
+
+  // Text files
   if (name.endsWith('.txt')) {
     const rd = new FileReader();
     rd.onload = (e) => {
@@ -1255,7 +1558,7 @@ function handleFileUpload(input) {
     };
     rd.readAsArrayBuffer(file);
   } else {
-    setStatus('error', 'Unsupported file type — use .txt, .pdf, or .docx');
+    setStatus('error', 'Unsupported file type — use .txt, .pdf, .docx, or audio files');
   }
 }
 
